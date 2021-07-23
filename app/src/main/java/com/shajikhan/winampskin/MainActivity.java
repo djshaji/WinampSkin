@@ -34,11 +34,12 @@ import android.widget.LinearLayout;
 
 public class MainActivity extends AppCompatActivity {
 
+    // HJ Story
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
     DisplayMetrics displayMetrics ;
     String TAG = "Winamp";
-    float UPSCALE_FACTOR = 1.3f ;
+    float UPSCALE_FACTOR = 1.43f ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,12 +66,48 @@ public class MainActivity extends AppCompatActivity {
 //        Log.d(TAG, "setup: " + width / displayMetrics.scaledDensity  * 116f/275f);
         mainWindow.setLayoutParams(layoutParams);
 
+        setupEqualizer();
+        setupPlaylist();
+    }
+
+    public void setupEqualizer () {
         LinearLayout equalizer = findViewById(R.id.equalizer);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, convertDpToPixel((int) (displayMetrics.widthPixels / displayMetrics.scaledDensity  * 116f/275f))) ;
+
         equalizer.setLayoutParams(layoutParams);
         Bitmap mBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.eqmain),
         mBitmap1 = Bitmap.createBitmap(mBitmap, 0, 0, convertDpToPixel(275), convertDpToPixel(116));
         equalizer.setBackground(new BitmapDrawable(getResources(), mBitmap1));
-        setupPlaylist();
+        Drawable drawable = new Drawable() {
+            @Override
+            public void draw(@NonNull Canvas canvas) {
+                this.setBounds(0, 0, convertDpToPixel(275), convertDpToPixel(116));
+                Paint paint = new Paint();
+                canvas.drawBitmap(
+                        upscaleBitmap(getBitmap(0, 0, 275, 116, R.drawable.eqmain)),
+                        0,
+                        0,
+                        paint
+                );
+            }
+
+            @Override
+            public void setAlpha(int alpha) {
+
+            }
+
+            @Override
+            public void setColorFilter(@Nullable ColorFilter colorFilter) {
+
+            }
+
+            @Override
+            public int getOpacity() {
+                return PixelFormat.OPAQUE;
+            }
+        } ;
+
+        equalizer.setBackground(drawable);
     }
 
     public int convertDpToPixel(float dp){
