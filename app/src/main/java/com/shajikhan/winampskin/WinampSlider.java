@@ -79,7 +79,7 @@ public class WinampSlider extends androidx.appcompat.widget.AppCompatSeekBar {
                 bitmapThumb = mainActivity.upscaleBitmapEx(bitmapThumb);
                 canvas.drawBitmap(
                         bitmapThumb,
-                        0, 0,
+                        mainActivity.UPSCALE_FACTOR * mainActivity.convertDpToPixel(1), 0,
                         paint
                 );
             }
@@ -112,11 +112,16 @@ public class WinampSlider extends androidx.appcompat.widget.AppCompatSeekBar {
 //        this.setMaxHeight(mainActivity.convertDpToPixel(64));
 //        this.setMaxWidth(mainActivity.convertDpToPixel(13));
 //        this.setMinWidth(mainActivity.convertDpToPixel(13));
-        this.setRotation(0);
-        this.setPadding(0, 0, mainActivity.convertDpToPixel(14), 0);
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
+//        this.setRotation(90);
+        this.setPadding(0, 0, mainActivity.convertDpToPixel(14), mainActivity.convertDpToPixel(64 * mainActivity.UPSCALE_FACTOR));
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         this.setLayoutParams(layoutParams);
         setMax(100);
+        setMin (0);
+        setMinimumWidth(mainActivity.convertDpToPixel(64 * mainActivity.UPSCALE_FACTOR));
+        setMinimumHeight(mainActivity.convertDpToPixel(14 * mainActivity.UPSCALE_FACTOR));
+        setMinHeight(mainActivity.convertDpToPixel(14 * mainActivity.UPSCALE_FACTOR));
+        setMinWidth(mainActivity.convertDpToPixel(64 * mainActivity.UPSCALE_FACTOR));
 //        setSplitTrack(false);
 //        this.setWidth((int) (mainActivity.convertDpToPixel(width * mainActivity.UPSCALE_FACTOR) + mainActivity.density));
 //        this.setHeight((int) (mainActivity.convertDpToPixel(height * mainActivity.UPSCALE_FACTOR) + mainActivity.density));
