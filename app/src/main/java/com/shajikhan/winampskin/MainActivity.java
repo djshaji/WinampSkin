@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
@@ -137,6 +138,21 @@ public class MainActivity extends AppCompatActivity {
                         convertDpToPixel(17 * UPSCALE_FACTOR),
                         paint
                 );
+                // pregain slider
+                float slider_coords [] = {20.5f, 77.5f, 95.5f, 113.5f, 131.f, 149.5f, 167.5f, 185.5f, 203.5f, 221.5f, 239.5f} ;
+                for (int i = 0 ; i < slider_coords.length ; i ++)
+                canvas.drawBitmap(
+                        upscaleBitmap(//getBitmap(28.5f, 164.5f, 13.5f, 63f, R.drawable.eqmain)
+                                Bitmap.createScaledBitmap(
+                                        getBitmap(28.8f, 164.5f, 13f, 63, R.drawable.eqmain),
+                                        convertDpToPixel(16), convertDpToPixel(65), true
+                                )
+                        ),
+                        convertDpToPixel(slider_coords [i] * UPSCALE_FACTOR),
+                        convertDpToPixel(37.5f * UPSCALE_FACTOR),
+                        paint
+                );
+
             }
 
             @Override
@@ -190,86 +206,22 @@ public class MainActivity extends AppCompatActivity {
         LinearLayout sliders = findViewById(R.id.equalizer_sliders);
         LinearLayout.LayoutParams layoutParamsSliders = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         layoutParamsSliders.setMargins(convertDpToPixel(21 * UPSCALE_FACTOR), convertDpToPixel(7 * UPSCALE_FACTOR), convertDpToPixel(4 * UPSCALE_FACTOR), convertDpToPixel(14 * UPSCALE_FACTOR));
-        sliders.setLayoutParams(layoutParamsSliders);
+//        sliders.setLayoutParams(layoutParamsSliders);
 
+        SeekBar preamp = findViewById(R.id.equalizer_preamp);
+//        preamp.setPadding(0, 0, convertDpToPixel(14 * UPSCALE_FACTOR), 0);
+//        preamp.setMinimumWidth(mainActivity.convertDpToPixel(64 * mainActivity.UPSCALE_FACTOR));
+//        preamp.setMinimumHeight(mainActivity.convertDpToPixel(14 * mainActivity.UPSCALE_FACTOR));
+//        preamp.setMinHeight(convertDpToPixel(14));
+//        preamp.setMinimumHeight(convertDpToPixel(14));
+
+//        LinearLayout.LayoutParams layoutParamsPreamp = new LinearLayout.LayoutParams(convertDpToPixel(64 * UPSCALE_FACTOR), ViewGroup.LayoutParams.WRAP_CONTENT);
+//        preamp.setLayoutParams(layoutParamsPreamp);
+//        preamp.setRotation(270);
+//        skinEqualizerSlider(preamp);
+//        preamp.setBackgroundColor(getResources().getColor(R.color.Aztec_Purple));
 //        AppCompatSeekBar gain = new WinampSlider(context, mainActivity, R.drawable.eqmain, 13, 164, 14, 64);
-        SeekBar gain = new SeekBar( context);
-        Drawable drawable1 = new Drawable() {
-            @Override
-            public void draw(@NonNull Canvas canvas) {
-                Paint paint = new Paint();
-                this.setBounds(mainActivity.convertDpToPixel(13), mainActivity.convertDpToPixel(164), mainActivity.convertDpToPixel(14), mainActivity.convertDpToPixel(64));
-                Bitmap bitmap = mainActivity.getBitmap(13, 164, 14, 64, R.drawable.eqmain);
-                bitmap = mainActivity.upscaleBitmapEx(bitmap);
-                canvas.drawBitmap(
-                        bitmap,
-                        0, 0,
-                        paint
-                );
-            }
-
-            @Override
-            public void setAlpha(int alpha) {
-
-            }
-
-            @Override
-            public void setColorFilter(@Nullable ColorFilter colorFilter) {
-
-            }
-
-            @Override
-            public int getOpacity() {
-                return PixelFormat.OPAQUE;
-            }
-        }, thumb = new Drawable() {
-            @Override
-            public void draw(@NonNull Canvas canvas) {
-                Paint paint = new Paint();
-                this.setBounds(mainActivity.convertDpToPixel(0), mainActivity.convertDpToPixel(11), mainActivity.convertDpToPixel(11), mainActivity.convertDpToPixel(11));
-                Bitmap bitmapThumb = mainActivity.getBitmap(0, 164, 11, 11, R.drawable.eqmain);
-                bitmapThumb = mainActivity.upscaleBitmapEx(bitmapThumb);
-                canvas.drawBitmap(
-                        bitmapThumb,
-                        mainActivity.UPSCALE_FACTOR * mainActivity.convertDpToPixel(1), 0,
-                        paint
-                );
-            }
-
-            @Override
-            public void setAlpha(int alpha) {
-
-            }
-
-            @Override
-            public void setColorFilter(@Nullable ColorFilter colorFilter) {
-
-            }
-
-            @Override
-            public int getOpacity() {
-                return PixelFormat.OPAQUE;
-            }
-        } ;
-
-//        this.setBackground(drawable);
-        gain.setProgressDrawable(drawable1);
-        thumb.setBounds(new Rect(0, 0, thumb.getIntrinsicWidth(),thumb.getIntrinsicHeight()));
-
-        gain.setThumbOffset(100);
-        gain.setThumb(thumb);
-//        gain.setBackgroundColor(getResources().getColor(R.color.Aztec_Purple));
-        gain.setPadding(0, 0, mainActivity.convertDpToPixel(14), mainActivity.convertDpToPixel(64 * mainActivity.UPSCALE_FACTOR));
-        LinearLayout.LayoutParams layoutParamsx = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        gain.setLayoutParams(layoutParamsx);
-        gain.setMax(100);
-        gain.setMin (0);
-        gain.setMinimumWidth(mainActivity.convertDpToPixel(64 * mainActivity.UPSCALE_FACTOR));
-        gain.setMinimumHeight(mainActivity.convertDpToPixel(14 * mainActivity.UPSCALE_FACTOR));
-        gain.setMinHeight(mainActivity.convertDpToPixel(14 * mainActivity.UPSCALE_FACTOR));
-        gain.setMinWidth(mainActivity.convertDpToPixel(64 * mainActivity.UPSCALE_FACTOR));
-
-        sliders.addView(gain);
+//        sliders.addView(gain);
     }
 
     public int convertDpToPixel(float dp){
@@ -418,4 +370,79 @@ public class MainActivity extends AppCompatActivity {
             true
         );
     }
+
+    public void skinEqualizerSlider (SeekBar seekBar) {
+        Drawable drawable = new Drawable() {
+            @Override
+            public void draw(@NonNull Canvas canvas) {
+                Paint paint = new Paint();
+                this.setBounds(mainActivity.convertDpToPixel(0), mainActivity.convertDpToPixel(0),
+                        mainActivity.convertDpToPixel(14), mainActivity.convertDpToPixel(64));
+                Bitmap bitmap = mainActivity.getBitmap(13, 164, 14, 64, R.drawable.eqmain);
+                bitmap = mainActivity.upscaleBitmapEx(bitmap);
+                bitmap = rotateBitmap(bitmap, 90);
+                canvas.drawBitmap(
+                        bitmap,
+                        0, 0,
+                        paint
+                );
+            }
+
+            @Override
+            public void setAlpha(int alpha) {
+
+            }
+
+            @Override
+            public void setColorFilter(@Nullable ColorFilter colorFilter) {
+
+            }
+
+            @Override
+            public int getOpacity() {
+                return PixelFormat.OPAQUE;
+            }
+        }, thumb = new Drawable() {
+            @Override
+            public void draw(@NonNull Canvas canvas) {
+                Paint paint = new Paint();
+                this.setBounds(mainActivity.convertDpToPixel(0), mainActivity.convertDpToPixel(11), mainActivity.convertDpToPixel(11), mainActivity.convertDpToPixel(11));
+                Bitmap bitmapThumb = mainActivity.getBitmap(0, 164, 11, 11, R.drawable.eqmain);
+                bitmapThumb = mainActivity.upscaleBitmapEx(bitmapThumb);
+                bitmapThumb = rotateBitmap(bitmapThumb, 90);
+                canvas.drawBitmap(
+                        bitmapThumb,
+                        mainActivity.UPSCALE_FACTOR * mainActivity.convertDpToPixel(1), 0,
+                        paint
+                );
+            }
+
+            @Override
+            public void setAlpha(int alpha) {
+
+            }
+
+            @Override
+            public void setColorFilter(@Nullable ColorFilter colorFilter) {
+
+            }
+
+            @Override
+            public int getOpacity() {
+                return PixelFormat.OPAQUE;
+            }
+        } ;
+
+        seekBar.setProgressDrawable(drawable);
+//        seekBar.setThumb(thumb);
+
+    }
+
+    public static Bitmap rotateBitmap(Bitmap source, float angle)
+    {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+    }
+
 }
