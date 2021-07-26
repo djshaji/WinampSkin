@@ -65,9 +65,11 @@
                     android:layout_gravity="center"
                     android:layout_marginLeft="-20dp"
                     android:thumb="@drawable/thumb"
+                    android:progress="50"
                     android:id="@+id/equalizer_60"
                     android:layout_height="wrap_content"/>
                 <SeekBar
+                    android:progress="50"
                     android:layout_width="100dp"
                     android:max="100"
                     android:progressTint="@android:color/transparent"
@@ -77,6 +79,102 @@
                     android:layout_marginLeft="-73dp"
                     android:thumb="@drawable/thumb"
                     android:id="@+id/equalizer_170"
+                    android:layout_height="wrap_content"/>
+                <SeekBar
+                    android:progress="50"
+                    android:layout_width="100dp"
+                    android:max="100"
+                    android:progressTint="@android:color/transparent"
+                    android:progressBackgroundTint="@android:color/transparent"
+                    android:rotation="270"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="-74dp"
+                    android:thumb="@drawable/thumb"
+                    android:id="@+id/equalizer_310"
+                    android:layout_height="wrap_content"/>
+                <SeekBar
+                    android:progress="50"
+                    android:layout_width="100dp"
+                    android:max="100"
+                    android:progressTint="@android:color/transparent"
+                    android:progressBackgroundTint="@android:color/transparent"
+                    android:rotation="270"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="-75dp"
+                    android:thumb="@drawable/thumb"
+                    android:id="@+id/equalizer_600"
+                    android:layout_height="wrap_content"/>
+                <SeekBar
+                    android:progress="50"
+                    android:layout_width="100dp"
+                    android:max="100"
+                    android:progressTint="@android:color/transparent"
+                    android:progressBackgroundTint="@android:color/transparent"
+                    android:rotation="270"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="-73dp"
+                    android:thumb="@drawable/thumb"
+                    android:id="@+id/equalizer_1000"
+                    android:layout_height="wrap_content"/>
+                <SeekBar
+                    android:progress="50"
+                    android:layout_width="100dp"
+                    android:max="100"
+                    android:progressTint="@android:color/transparent"
+                    android:progressBackgroundTint="@android:color/transparent"
+                    android:rotation="270"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="-74dp"
+                    android:thumb="@drawable/thumb"
+                    android:id="@+id/equalizer_3000"
+                    android:layout_height="wrap_content"/>
+                <SeekBar
+                    android:progress="50"
+                    android:layout_width="100dp"
+                    android:max="100"
+                    android:progressTint="@android:color/transparent"
+                    android:progressBackgroundTint="@android:color/transparent"
+                    android:rotation="270"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="-74dp"
+                    android:thumb="@drawable/thumb"
+                    android:id="@+id/equalizer_6000"
+                    android:layout_height="wrap_content"/>
+                <SeekBar
+                    android:progress="50"
+                    android:layout_width="100dp"
+                    android:max="100"
+                    android:progressTint="@android:color/transparent"
+                    android:progressBackgroundTint="@android:color/transparent"
+                    android:rotation="270"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="-74dp"
+                    android:thumb="@drawable/thumb"
+                    android:id="@+id/equalizer_12000"
+                    android:layout_height="wrap_content"/>
+                <SeekBar
+                    android:progress="50"
+                    android:layout_width="100dp"
+                    android:max="100"
+                    android:progressTint="@android:color/transparent"
+                    android:progressBackgroundTint="@android:color/transparent"
+                    android:rotation="270"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="-74dp"
+                    android:thumb="@drawable/thumb"
+                    android:id="@+id/equalizer_14000"
+                    android:layout_height="wrap_content"/>
+                <SeekBar
+                    android:progress="50"
+                    android:layout_width="100dp"
+                    android:max="100"
+                    android:progressTint="@android:color/transparent"
+                    android:progressBackgroundTint="@android:color/transparent"
+                    android:rotation="270"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="-74dp"
+                    android:thumb="@drawable/thumb"
+                    android:id="@+id/equalizer_16000"
                     android:layout_height="wrap_content"/>
             </LinearLayout>
         </LinearLayout>
