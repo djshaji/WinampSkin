@@ -9,4 +9,10 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string-array name="sample_playlist">
+        <item>U2 - Vertigo</item>
+        <item>Oasis - Wonderwall</item>
+        <item>Coldplay - Yellow</item>
+        <item>Aceriff - Mundiyan</item>
+    </string-array>
 </resources>

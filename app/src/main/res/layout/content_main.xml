@@ -24,6 +24,30 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
+                android:layout_height="55dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="88 88"
+                    android:fontFamily="monospace"
+                    android:layout_marginLeft="75dp"
+                    android:textSize="20dp"
+                    android:textColor="@color/Platinum"
+                    android:layout_marginTop="32dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/Platinum"
+                    android:layout_marginTop="30dp"
+                    android:fontFamily="sans-serif-smallcaps"
+                    android:layout_marginLeft="20dp"
+                    android:text="Winamp Intro"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
                 <SeekBar
@@ -35,7 +59,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="150dp"
                     android:progress="100"
-                    android:layout_marginTop="83dp"/>
+                    android:layout_marginTop="28dp"/>
                 <SeekBar
                     android:layout_width="66dp"
                     android:id="@+id/balance_bar"
@@ -45,7 +69,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="0dp"
                     android:progress="50"
-                    android:layout_marginTop="83dp"/>
+                    android:layout_marginTop="28dp"/>
 
             </LinearLayout>
             <LinearLayout
@@ -64,6 +88,64 @@
                     android:progressBackgroundTint="@android:color/transparent"
                     android:progressTint="@android:color/transparent"
                     android:thumb="@drawable/seekbar" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="15dp"
+                android:layout_height="40dp">
+
+                <Button
+                    android:background="@android:color/transparent"
+                    android:id="@+id/prev"
+                    android:layout_width="36dp"
+                    android:layout_height="40dp"/>
+                <Button
+                    android:background="@android:color/transparent"
+                    android:id="@+id/play"
+                    android:layout_width="36dp"
+                    android:layout_height="40dp"/>
+                <Button
+                    android:background="@android:color/transparent"
+                    android:id="@+id/pause"
+                    android:layout_width="36dp"
+                    android:layout_height="40dp"/>
+                <Button
+                    android:background="@android:color/transparent"
+                    android:id="@+id/stop"
+                    android:layout_width="36dp"
+                    android:layout_height="40dp"/>
+                <Button
+                    android:background="@android:color/transparent"
+                    android:id="@+id/next"
+                    android:layout_width="36dp"
+                    android:layout_height="40dp"/>
+                <Button
+                    android:background="@android:color/transparent"
+                    android:id="@+id/eject"
+                    android:layout_marginLeft="6dp"
+                    android:layout_width="36dp"
+                    android:layout_height="40dp"/>
+                <Button
+                    android:background="@android:color/transparent"
+                    android:id="@+id/shuffle"
+                    android:layout_marginLeft="6dp"
+                    android:layout_width="66dp"
+                    android:layout_height="30dp"/>
+                <Button
+                    android:background="@android:color/transparent"
+                    android:id="@+id/repeat"
+                    android:layout_marginLeft="6dp"
+                    android:layout_width="36dp"
+                    android:layout_height="30dp"/>
+                <Button
+                    android:background="@android:color/transparent"
+                    android:id="@+id/about"
+                    android:layout_marginLeft="5dp"
+                    android:layout_width="40dp"
+                    android:layout_height="35dp"/>
 
             </LinearLayout>
         </LinearLayout>
@@ -228,8 +310,47 @@
             android:layout_height="wrap_content"
             android:id="@+id/playlist"
             android:layout_weight="1"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
+            <ListView
+                android:layout_width="match_parent"
+                android:padding="30dp"
+                android:id="@+id/playlist_view"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"></ListView>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="126dp">
+                <Button
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@android:color/transparent"
+                    android:id="@+id/playlist_add"
+                    android:layout_marginLeft="18dp"/>
+                <Button
+                    android:layout_width="40dp"
+                    android:background="@android:color/transparent"
+                    android:layout_height="40dp"
+                    android:id="@+id/playlist_remove"/>
+                <Button
+                    android:layout_width="40dp"
+                    android:background="@android:color/transparent"
+                    android:layout_height="40dp"
+                    android:id="@+id/playlist_select"/>
+                <Button
+                    android:background="@android:color/transparent"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:id="@+id/playlist_misc"/>
+                <Button
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="144dp"
+                    android:background="@android:color/transparent"
+                    android:layout_marginRight="0dp"
+                    android:id="@+id/playlist_load"/>
+
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

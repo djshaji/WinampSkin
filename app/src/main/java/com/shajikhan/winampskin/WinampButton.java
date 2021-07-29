@@ -30,7 +30,8 @@ public class WinampButton extends androidx.appcompat.widget.AppCompatButton {
     }
 
     public WinampButton(@NonNull Context _context, MainActivity _mainActivity,
-                        int _resource, float _x, float _y, float _width, float _height) {
+                        int _resource, float _x, float _y,
+                        float _width, float _height) {
         super(_context);
 
         context = _context ;

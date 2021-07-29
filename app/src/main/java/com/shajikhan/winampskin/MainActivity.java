@@ -1,6 +1,9 @@
 package com.shajikhan.winampskin;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -40,9 +43,11 @@ import com.shajikhan.winampskin.databinding.ActivityMainBinding;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.Space;
 ;
@@ -51,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
     // HJ Story
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
+    Button prev, next, play, pause, stop, eject, shuffle, repeat, about ;
     MainActivity mainActivity ;
     Context context ;
     DisplayMetrics displayMetrics ;
@@ -67,12 +73,17 @@ public class MainActivity extends AppCompatActivity {
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         density = displayMetrics.scaledDensity;
 
+//        ProgressDialog progressDialog = new ProgressDialog(this) ;
+//        progressDialog.setIndeterminate(true);
+//        progressDialog.show(this, "Winamp", "Whipping the Llama's Ass ...");
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         mainActivity = this ;
         context = getApplicationContext();
         setup();
+//        progressDialog.cancel();
+//        Log.d(TAG, "onCreate: Setup complete");
     }
 
 
@@ -261,6 +272,31 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
+        prev = findViewById(R.id.prev);
+        play = findViewById(R.id.play);
+        pause = findViewById(R.id.pause);
+        next = findViewById(R.id.next);
+        stop = findViewById(R.id.stop);
+        eject = findViewById(R.id.eject);
+        shuffle = findViewById(R.id.shuffle);
+        repeat = findViewById(R.id.repeat);
+        about = findViewById(R.id.about);
+
+        Button buttons [] = {prev, next, stop, eject, play, pause, shuffle, repeat, about} ;
+        for (Button b: buttons) {
+            b.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
+                    builder.setMessage(v.toString())
+                            .setPositiveButton("Ok !", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    // FIRE ZE MISSILES!
+                                }
+                            }).show();
+                }
+            });
+        }
         mainWindow.setBackground(drawable);
     }
 
@@ -515,7 +551,18 @@ public class MainActivity extends AppCompatActivity {
             }
         } ;
 
+        String [] songs = {
+                "U2 - Vertigo",
+                "Oasis - Live Forever"
+        } ;
+
         linearLayout.setBackground(drawable);
+        ArrayAdapter adapter = new ArrayAdapter<String>(this,
+                R.layout.listview, songs);
+
+        ListView listView = (ListView) findViewById(R.id.playlist_view);
+        listView.setAdapter(adapter);
+
 
     }
 
@@ -540,6 +587,37 @@ public class MainActivity extends AppCompatActivity {
                 (int)((float) bitmap.getHeight() * UPSCALE_FACTOR) + (int) density,
             true
         );
+    }
+
+    public void skinButton (Button button, int resource, int x, int y, int width, int height, int left, int top) {
+        Drawable drawable = new Drawable() {
+            @Override
+            public void draw(@NonNull Canvas canvas) {
+                Paint paint = new Paint() ;
+                setBounds(0, 0, width, height);
+                canvas.drawBitmap(
+                        upscaleBitmap(
+                                getBitmap(x, y, width, height, resource)),
+                        convertDpToPixel(left),
+                        convertDpToPixel(top),
+                        paint);
+            }
+
+            @Override
+            public void setAlpha(int alpha) {
+
+            }
+
+            @Override
+            public void setColorFilter(@Nullable ColorFilter colorFilter) {
+
+            }
+
+            @Override
+            public int getOpacity() {
+                return 0;
+            }
+        };
     }
 
     public void skinEqualizerSlider (SeekBar seekBar) {
