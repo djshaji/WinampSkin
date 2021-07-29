@@ -17,11 +17,55 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/main_window"
+            android:layout_height="168dp"
             android:background="@drawable/main"
-            android:orientation="horizontal">
+            android:id="@+id/main_window"
+            android:orientation="vertical">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <SeekBar
+                    android:layout_width="100dp"
+                    android:id="@+id/volume_bar"
+                    android:thumb="@drawable/volume_thumb"
+                    android:progressTint="@android:color/transparent"
+                    android:progressBackgroundTint="@android:color/transparent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="150dp"
+                    android:progress="100"
+                    android:layout_marginTop="83dp"/>
+                <SeekBar
+                    android:layout_width="66dp"
+                    android:id="@+id/balance_bar"
+                    android:thumb="@drawable/volume_thumb"
+                    android:progressTint="@android:color/transparent"
+                    android:progressBackgroundTint="@android:color/transparent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="0dp"
+                    android:progress="50"
+                    android:layout_marginTop="83dp"/>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <SeekBar
+                    android:id="@+id/seek_bar"
+                    android:layout_width="378dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="6dp"
+                    android:progress="0"
+                    android:progressBackgroundTint="@android:color/transparent"
+                    android:progressTint="@android:color/transparent"
+                    android:thumb="@drawable/seekbar" />
+
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout

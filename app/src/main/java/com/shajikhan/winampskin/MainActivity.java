@@ -89,8 +89,179 @@ public class MainActivity extends AppCompatActivity {
 //        Log.d(TAG, "setup: " + width / displayMetrics.scaledDensity  * 116f/275f);
         mainWindow.setLayoutParams(layoutParams);
 
+        setupMainWindow();
         setupEqualizer();
         setupPlaylist();
+    }
+
+    public void setupMainWindow () {
+        LinearLayout mainWindow = findViewById(R.id.main_window);
+        Drawable drawable = new Drawable() {
+            @Override
+            public void draw(@NonNull Canvas canvas) {
+                setBounds(0, 0, convertDpToPixel(275), convertDpToPixel(116));
+                Paint paint = new Paint();
+                canvas.drawBitmap(
+                        upscaleBitmap(getBitmap(0, 0, 275, 116, R.drawable.main)),
+                        0,
+                        0,
+                        paint
+                );
+                // titlebar
+                canvas.drawBitmap(
+                        upscaleBitmap(//Bitmap.createScaledBitmap(
+                                getBitmap(27, 57, 275, 13, R.drawable.titlebar)),
+                                //convertDpToPixel(275), convertDpToPixel(16), true)),
+                        0,
+                        convertDpToPixel(3),
+                        paint
+                );
+                // cbuttons
+                canvas.drawBitmap(
+                        upscaleBitmap(//Bitmap.createScaledBitmap(
+                                getBitmap(0, 0, 114, 18, R.drawable.cbuttons)),
+                                //convertDpToPixel(275), convertDpToPixel(16), true)),
+                        convertDpToPixel(15 * UPSCALE_FACTOR) + 3,
+                        convertDpToPixel(87 * UPSCALE_FACTOR) + 3,
+                        paint
+                );
+                //eject
+                canvas.drawBitmap(
+                        upscaleBitmap(//Bitmap.createScaledBitmap(
+                                getBitmap(115, 0, 21, 16, R.drawable.cbuttons)),
+                                //convertDpToPixel(275), convertDpToPixel(16), true)),
+                        convertDpToPixel(136 * UPSCALE_FACTOR) + 3,
+                        convertDpToPixel(88 * UPSCALE_FACTOR) + 3,
+                        paint
+                );
+                //shuffle
+                canvas.drawBitmap(
+                        upscaleBitmap(//Bitmap.createScaledBitmap(
+                                getBitmap(28, 0, 45, 15, R.drawable.shufrep)),
+                                //convertDpToPixel(275), convertDpToPixel(16), true)),
+                        convertDpToPixel(164 * UPSCALE_FACTOR),
+                        convertDpToPixel(89 * UPSCALE_FACTOR),
+                        paint
+                );
+                //repeat
+                canvas.drawBitmap(
+                        upscaleBitmap(//Bitmap.createScaledBitmap(
+                                getBitmap(0, 0, 29, 15, R.drawable.shufrep)),
+                        //convertDpToPixel(275), convertDpToPixel(16), true)),
+                        convertDpToPixel(209 * UPSCALE_FACTOR),
+                        convertDpToPixel(89 * UPSCALE_FACTOR),
+                        paint
+                );
+
+                // stereo
+                canvas.drawBitmap(
+                        upscaleBitmap(//Bitmap.createScaledBitmap(
+                                getBitmap(0, 0, 29, 12, R.drawable.monoster)),
+                        //convertDpToPixel(275), convertDpToPixel(16), true)),
+                        convertDpToPixel(239 * UPSCALE_FACTOR),
+                        convertDpToPixel(41 * UPSCALE_FACTOR),
+                        paint
+                );
+
+                // mono
+                canvas.drawBitmap(
+                        upscaleBitmap(//Bitmap.createScaledBitmap(
+                                getBitmap(29, 12, 29, 12, R.drawable.monoster)),
+                        //convertDpToPixel(275), convertDpToPixel(16), true)),
+                        convertDpToPixel(210 * UPSCALE_FACTOR),
+                        convertDpToPixel(41 * UPSCALE_FACTOR),
+                        paint
+                );
+
+                //eq
+                canvas.drawBitmap(
+                        upscaleBitmap(//Bitmap.createScaledBitmap(
+                                getBitmap(0, 61, 24, 12, R.drawable.shufrep)),
+                        //convertDpToPixel(275), convertDpToPixel(16), true)),
+                        convertDpToPixel(219 * UPSCALE_FACTOR),
+                        convertDpToPixel(58 * UPSCALE_FACTOR),
+                        paint
+                );
+
+                //pl
+                canvas.drawBitmap(
+                        upscaleBitmap(//Bitmap.createScaledBitmap(
+                                getBitmap(23, 61, 24, 12, R.drawable.shufrep)),
+                        //convertDpToPixel(275), convertDpToPixel(16), true)),
+                        convertDpToPixel(243 * UPSCALE_FACTOR),
+                        convertDpToPixel(58 * UPSCALE_FACTOR),
+                        paint
+                );
+
+                //vol
+                canvas.drawBitmap(
+                        upscaleBitmap(Bitmap.createScaledBitmap(
+                                getBitmap(0, 0, 67.6f, 12.3f, R.drawable.volume),
+                        convertDpToPixel(69), convertDpToPixel(14), true)),
+                        convertDpToPixel(106.5f * UPSCALE_FACTOR),
+                        convertDpToPixel(56.5f * UPSCALE_FACTOR),
+                        paint
+                );
+
+                //balance
+                canvas.drawBitmap(
+                        upscaleBitmap(Bitmap.createScaledBitmap(
+                                getBitmap(9.3f, 0, 37.5f, 13.6f, R.drawable.balance),
+                        convertDpToPixel(40), convertDpToPixel(15), true)),
+                        convertDpToPixel(176.5f * UPSCALE_FACTOR),
+                        convertDpToPixel(56.5f * UPSCALE_FACTOR),
+                        paint
+                );
+
+                SeekBar volume = findViewById(R.id.volume_bar);
+//                volume.setThumb(new Drawable() {
+//                    @Override
+//                    public void draw(@NonNull Canvas canvas) {
+//                        canvas.drawBitmap(
+//                                upscaleBitmap(Bitmap.createScaledBitmap(
+//                                        getBitmap(0, 422, 14, 11, R.drawable.volume),
+//                                        convertDpToPixel(14), convertDpToPixel(11), true)),
+//                                0,
+//                                0,
+//                                paint
+//                        );
+//                    }
+//
+//                    @Override
+//                    public void setAlpha(int alpha) {
+//
+//                    }
+//
+//                    @Override
+//                    public void setColorFilter(@Nullable ColorFilter colorFilter) {
+//
+//                    }
+//
+//                    @Override
+//                    public int getOpacity() {
+//                        return 0;
+//                    }
+//                });
+
+            }
+
+            @Override
+            public void setAlpha(int alpha) {
+
+            }
+
+            @Override
+            public void setColorFilter(@Nullable ColorFilter colorFilter) {
+
+            }
+
+            @Override
+            public int getOpacity() {
+                return PixelFormat.OPAQUE;
+            }
+        };
+
+        mainWindow.setBackground(drawable);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
