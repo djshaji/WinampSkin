@@ -43,6 +43,7 @@ import com.shajikhan.winampskin.databinding.ActivityMainBinding;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -50,7 +51,11 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.Space;
-;
+;import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
 
     // HJ Story
@@ -64,6 +69,9 @@ public class MainActivity extends AppCompatActivity {
     // FIXME: 7/24/21 Determine the following automagically
     float UPSCALE_FACTOR = 1.43f ;
     float density ;
+
+    List <String> playlistElements ;
+    HashMap playlistUri ;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
@@ -557,12 +565,35 @@ public class MainActivity extends AppCompatActivity {
         } ;
 
         linearLayout.setBackground(drawable);
-        ArrayAdapter adapter = new ArrayAdapter<String>(this,
-                R.layout.listview, songs);
+
+        final List< String > ListElementsArrayList = new ArrayList< String >
+                (Arrays.asList(songs));
+
+        final ArrayAdapter < String > adapter = new ArrayAdapter < String >
+                (MainActivity.this, R.layout.listview,
+                        ListElementsArrayList);
 
         ListView listView = (ListView) findViewById(R.id.playlist_view);
         listView.setAdapter(adapter);
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                alert (playlistUri.get(parent.getAdapter().getItem(position).toString()).toString());
+            }
+        });
+
+        ListElementsArrayList.add("Coldplay - Yellow");
+        playlistElements = ListElementsArrayList ;
+        playlistUri = new HashMap <String, String>();
+        playlistUri.put("U2 - Vertigo", "https://music.shaji.in/media/No%20Destination%20(Preview)/savera.mp3");
+        playlistUri.put("Oasis - Live Forever", "https://music.shaji.in/media/No%20Destination%20(Preview)/savera.mp3");
+        playlistUri.put("Coldplay - Yellow", "https://music.shaji.in/media/No%20Destination%20(Preview)/savera.mp3");
+
+    }
+
+    public void playlistAdd (String track, String uri) {
+        playlistElements.add("Coldplay - Yellow");
 
     }
 
@@ -694,4 +725,14 @@ public class MainActivity extends AppCompatActivity {
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
     }
 
+    public void alert(String msg) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(msg)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // FIRE ZE MISSILES!
+                    }
+                }).show();
+
+    }
 }
