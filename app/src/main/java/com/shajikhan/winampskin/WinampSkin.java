@@ -23,6 +23,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -35,6 +36,7 @@ import java.util.List;
 
 public class WinampSkin {
     Button prev, next, play, pause, stop, eject, shuffle, repeat, about ;
+    SeekBar seek ;
     MainActivity mainActivity ;
     Context context ;
     DisplayMetrics displayMetrics ;
@@ -45,6 +47,7 @@ public class WinampSkin {
 
     List <String> playlistElements ;
     HashMap playlistUri ;
+    TextView bigClock, trackTitle ;
 
     ListView playlistView ;
 
@@ -79,6 +82,10 @@ public class WinampSkin {
 
     public void setupMainWindow () {
         LinearLayout mainWindow = mainActivity.findViewById(R.id.main_window);
+        seek = mainWindow.findViewById(R.id.seek_bar);
+        bigClock = mainWindow.findViewById(R.id.big_clock);
+        trackTitle = mainWindow.findViewById(R.id.track_title);
+
         Drawable drawable = new Drawable() {
             @Override
             public void draw(@NonNull Canvas canvas) {
@@ -527,8 +534,8 @@ public class WinampSkin {
         } ;
 
         String [] songs = {
-                "U2 - Vertigo",
-                "Oasis - Live Forever"
+//                "U2 - Vertigo",
+//                "Oasis - Live Forever"
         } ;
 
         linearLayout.setBackground(drawable);
@@ -554,7 +561,7 @@ public class WinampSkin {
 
          */
 
-        ListElementsArrayList.add("Coldplay - Yellow");
+//        ListElementsArrayList.add("Coldplay - Yellow");
         playlistElements = ListElementsArrayList ;
         playlistUri = new HashMap<String, String>();
 //        playlistUri.put("U2 - Vertigo", "https://music.shaji.in/media/No%20Destination%20(Preview)/savera.mp3");

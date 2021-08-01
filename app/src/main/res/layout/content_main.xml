@@ -27,9 +27,11 @@
                 android:layout_height="55dp">
 
                 <TextView
+                    android:id="@+id/big_clock"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="88 88"
+                    android:visibility="invisible"
                     android:fontFamily="monospace"
                     android:layout_marginLeft="75dp"
                     android:textSize="20dp"
@@ -37,6 +39,9 @@
                     android:layout_marginTop="32dp"/>
 
                 <TextView
+                    android:id="@+id/track_title"
+                    android:textSize="14dp"
+                    android:visibility="invisible"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/Platinum"
@@ -79,12 +84,14 @@
 
                 <SeekBar
                     android:id="@+id/seek_bar"
-                    android:layout_width="378dp"
+                    android:layout_width="375dp"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="6dp"
                     android:progress="0"
+                    android:max="100"
+                    android:visibility="invisible"
                     android:progressBackgroundTint="@android:color/transparent"
                     android:progressTint="@android:color/transparent"
                     android:thumb="@drawable/seekbar" />

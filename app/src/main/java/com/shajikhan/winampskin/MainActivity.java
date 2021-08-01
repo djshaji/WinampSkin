@@ -86,6 +86,9 @@ public class MainActivity extends AppCompatActivity {
 //        Log.d(TAG, "onCreate: Setup complete");
     }
 
-
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        winampMedia.destroy ();
+    }
 }
