@@ -46,6 +46,8 @@ public class WinampSkin {
     List <String> playlistElements ;
     HashMap playlistUri ;
 
+    ListView playlistView ;
+
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     WinampSkin (Context context_, MainActivity mainActivity_) {
         mainActivity = mainActivity_ ;
@@ -253,6 +255,7 @@ public class WinampSkin {
         about = mainActivity.findViewById(R.id.about);
 
         Button buttons [] = {prev, next, stop, eject, play, pause, shuffle, repeat, about} ;
+        /*
         for (Button b: buttons) {
             b.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -267,6 +270,8 @@ public class WinampSkin {
                 }
             });
         }
+
+         */
         mainWindow.setBackground(drawable);
     }
 
@@ -538,6 +543,8 @@ public class WinampSkin {
         ListView listView = (ListView) mainActivity.findViewById(R.id.playlist_view);
         listView.setAdapter(adapter);
 
+        playlistView = listView ;
+        /*
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -545,17 +552,20 @@ public class WinampSkin {
             }
         });
 
+         */
+
         ListElementsArrayList.add("Coldplay - Yellow");
         playlistElements = ListElementsArrayList ;
         playlistUri = new HashMap<String, String>();
-        playlistUri.put("U2 - Vertigo", "https://music.shaji.in/media/No%20Destination%20(Preview)/savera.mp3");
-        playlistUri.put("Oasis - Live Forever", "https://music.shaji.in/media/No%20Destination%20(Preview)/savera.mp3");
-        playlistUri.put("Coldplay - Yellow", "https://music.shaji.in/media/No%20Destination%20(Preview)/savera.mp3");
+//        playlistUri.put("U2 - Vertigo", "https://music.shaji.in/media/No%20Destination%20(Preview)/savera.mp3");
+//        playlistUri.put("Oasis - Live Forever", "https://music.shaji.in/media/No%20Destination%20(Preview)/savera.mp3");
+//        playlistUri.put("Coldplay - Yellow", "https://music.shaji.in/media/No%20Destination%20(Preview)/savera.mp3");
 
     }
 
     public void playlistAdd (String track, String uri) {
-        playlistElements.add("Coldplay - Yellow");
+        playlistElements.add(track);
+        playlistUri.put (track, uri);
 
     }
 

@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     WinampSkin winampSkin;
     Context context ;
+    WinampMedia winampMedia ;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
@@ -78,6 +79,8 @@ public class MainActivity extends AppCompatActivity {
         context = getApplicationContext();
         winampSkin = new WinampSkin(context, this);
         winampSkin.setup ();
+        winampMedia = new WinampMedia(context, this);
+
 //        setup();
 //        progressDialog.cancel();
 //        Log.d(TAG, "onCreate: Setup complete");
