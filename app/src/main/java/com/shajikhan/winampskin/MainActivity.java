@@ -582,7 +582,7 @@ public class MainActivity extends AppCompatActivity {
                 alert (playlistUri.get(parent.getAdapter().getItem(position).toString()).toString());
             }
         });
-
+ 
         ListElementsArrayList.add("Coldplay - Yellow");
         playlistElements = ListElementsArrayList ;
         playlistUri = new HashMap <String, String>();
