@@ -63,9 +63,9 @@ public class WinampButton extends androidx.appcompat.widget.AppCompatButton {
             @Override
             public void draw(@NonNull Canvas canvas) {
                 Paint paint = new Paint();
-                this.setBounds(mainActivity.convertDpToPixel(x), mainActivity.convertDpToPixel(y), mainActivity.convertDpToPixel(width), mainActivity.convertDpToPixel(height));
-                bitmap = mainActivity.getBitmap(x, y, width, height, resource);
-                bitmap = mainActivity.upscaleBitmapEx(bitmap);
+                this.setBounds(mainActivity.winampSkin.convertDpToPixel(x), mainActivity.winampSkin.convertDpToPixel(y), mainActivity.winampSkin.convertDpToPixel(width), mainActivity.winampSkin.convertDpToPixel(height));
+                bitmap = mainActivity.winampSkin.getBitmap(x, y, width, height, resource);
+                bitmap = mainActivity.winampSkin.upscaleBitmapEx(bitmap);
                 canvas.drawBitmap(
                         bitmap,
 //                        mainActivity.convertDpToPixel(top),
@@ -92,8 +92,8 @@ public class WinampButton extends androidx.appcompat.widget.AppCompatButton {
         } ;
 
         this.setBackground(drawable);
-        this.setWidth((int) (mainActivity.convertDpToPixel(width * mainActivity.UPSCALE_FACTOR) + mainActivity.density));
-        this.setHeight((int) (mainActivity.convertDpToPixel(height * mainActivity.UPSCALE_FACTOR) + mainActivity.density));
+        this.setWidth((int) (mainActivity.winampSkin.convertDpToPixel(width * mainActivity.winampSkin.UPSCALE_FACTOR) + mainActivity.winampSkin.density));
+        this.setHeight((int) (mainActivity.winampSkin.convertDpToPixel(height * mainActivity.winampSkin.UPSCALE_FACTOR) + mainActivity.winampSkin.density));
 //        this.setBackgroundColor(getResources().getColor(R.color.Water));
     }
 }

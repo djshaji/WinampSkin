@@ -46,9 +46,9 @@ public class WinampSlider extends androidx.appcompat.widget.AppCompatSeekBar {
             @Override
             public void draw(@NonNull Canvas canvas) {
                 Paint paint = new Paint();
-                this.setBounds(mainActivity.convertDpToPixel(x), mainActivity.convertDpToPixel(y), mainActivity.convertDpToPixel(width), mainActivity.convertDpToPixel(height));
-                bitmap = mainActivity.getBitmap(x, y, width, height, resource);
-                bitmap = mainActivity.upscaleBitmapEx(bitmap);
+                this.setBounds(mainActivity.winampSkin.convertDpToPixel(x), mainActivity.winampSkin.convertDpToPixel(y), mainActivity.winampSkin.convertDpToPixel(width), mainActivity.winampSkin.convertDpToPixel(height));
+                bitmap = mainActivity.winampSkin.getBitmap(x, y, width, height, resource);
+                bitmap = mainActivity.winampSkin.upscaleBitmapEx(bitmap);
                 canvas.drawBitmap(
                         bitmap,
                         0, 0,
@@ -74,12 +74,12 @@ public class WinampSlider extends androidx.appcompat.widget.AppCompatSeekBar {
             @Override
             public void draw(@NonNull Canvas canvas) {
                 Paint paint = new Paint();
-                this.setBounds(mainActivity.convertDpToPixel(0), mainActivity.convertDpToPixel(11), mainActivity.convertDpToPixel(11), mainActivity.convertDpToPixel(11));
-                bitmapThumb = mainActivity.getBitmap(0, 164, 11, 11, resource);
-                bitmapThumb = mainActivity.upscaleBitmapEx(bitmapThumb);
+                this.setBounds(mainActivity.winampSkin.convertDpToPixel(0), mainActivity.winampSkin.convertDpToPixel(11), mainActivity.winampSkin.convertDpToPixel(11), mainActivity.winampSkin.convertDpToPixel(11));
+                bitmapThumb = mainActivity.winampSkin.getBitmap(0, 164, 11, 11, resource);
+                bitmapThumb = mainActivity.winampSkin.upscaleBitmapEx(bitmapThumb);
                 canvas.drawBitmap(
                         bitmapThumb,
-                        mainActivity.UPSCALE_FACTOR * mainActivity.convertDpToPixel(1), 0,
+                        mainActivity.winampSkin.UPSCALE_FACTOR * mainActivity.winampSkin.convertDpToPixel(1), 0,
                         paint
                 );
             }
@@ -113,15 +113,15 @@ public class WinampSlider extends androidx.appcompat.widget.AppCompatSeekBar {
 //        this.setMaxWidth(mainActivity.convertDpToPixel(13));
 //        this.setMinWidth(mainActivity.convertDpToPixel(13));
 //        this.setRotation(90);
-        this.setPadding(0, 0, mainActivity.convertDpToPixel(14), mainActivity.convertDpToPixel(64 * mainActivity.UPSCALE_FACTOR));
+        this.setPadding(0, 0, mainActivity.winampSkin.convertDpToPixel(14), mainActivity.winampSkin.convertDpToPixel(64 * mainActivity.winampSkin.UPSCALE_FACTOR));
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         this.setLayoutParams(layoutParams);
         setMax(100);
         setMin (0);
-        setMinimumWidth(mainActivity.convertDpToPixel(64 * mainActivity.UPSCALE_FACTOR));
-        setMinimumHeight(mainActivity.convertDpToPixel(14 * mainActivity.UPSCALE_FACTOR));
-        setMinHeight(mainActivity.convertDpToPixel(14 * mainActivity.UPSCALE_FACTOR));
-        setMinWidth(mainActivity.convertDpToPixel(64 * mainActivity.UPSCALE_FACTOR));
+        setMinimumWidth(mainActivity.winampSkin.convertDpToPixel(64 * mainActivity.winampSkin.UPSCALE_FACTOR));
+        setMinimumHeight(mainActivity.winampSkin.convertDpToPixel(14 * mainActivity.winampSkin.UPSCALE_FACTOR));
+        setMinHeight(mainActivity.winampSkin.convertDpToPixel(14 * mainActivity.winampSkin.UPSCALE_FACTOR));
+        setMinWidth(mainActivity.winampSkin.convertDpToPixel(64 * mainActivity.winampSkin.UPSCALE_FACTOR));
 //        setSplitTrack(false);
 //        this.setWidth((int) (mainActivity.convertDpToPixel(width * mainActivity.UPSCALE_FACTOR) + mainActivity.density));
 //        this.setHeight((int) (mainActivity.convertDpToPixel(height * mainActivity.UPSCALE_FACTOR) + mainActivity.density));
