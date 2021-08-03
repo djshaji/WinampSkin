@@ -1,6 +1,12 @@
 package com.shajikhan.winampskin;
 
+import static android.media.audiofx.AudioEffect.CONTENT_TYPE_MUSIC;
+import static android.media.audiofx.AudioEffect.EXTRA_AUDIO_SESSION;
+import static android.media.audiofx.AudioEffect.EXTRA_CONTENT_TYPE;
+
 import android.content.Context;
+import android.content.Intent;
+import android.media.audiofx.AudioEffect;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
@@ -111,6 +117,60 @@ public class WinampMedia {
                 exoPlayer.next();
             }
         });
+
+        winampSkin.eq_pl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent eqIntent = new Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL);
+                eqIntent.putExtra(EXTRA_CONTENT_TYPE, CONTENT_TYPE_MUSIC);
+                eqIntent.putExtra(EXTRA_AUDIO_SESSION, CONTENT_TYPE_MUSIC);
+
+                mainActivity.startActivityForResult(eqIntent, 0);
+
+            }
+        });
+
+        winampSkin.volume.setProgress((int) exoPlayer.getVolume() * 1000);
+        winampSkin.volume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                exoPlayer.setVolume((float)progress / 1000.0f);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        winampSkin.shuffle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                exoPlayer.setShuffleModeEnabled(!exoPlayer.getShuffleModeEnabled());
+                winampSkin.paintShuffle(exoPlayer.getShuffleModeEnabled());
+            }
+        });
+
+        winampSkin.repeat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int repeatMode = exoPlayer.getRepeatMode() ;
+                if (repeatMode == 0) {
+                    winampSkin.paintRepeat(true);
+                    repeatMode = Player.REPEAT_MODE_ALL ;
+                } else {
+                    repeatMode = 0;
+                    winampSkin.paintRepeat(false);
+                }
+
+                exoPlayer.setRepeatMode(repeatMode);
+            }
+        });
     }
 
     void setupPlaylist () {
@@ -131,15 +191,24 @@ public class WinampMedia {
                 winampSkin.trackTitle.setVisibility(View.VISIBLE);
                 winampSkin.trackTitle.setText(winampSkin.playlistElements.get(position));
                 // Build the media item.
-                MediaItem mediaItem = MediaItem.fromUri(winampSkin.playlistUri.get(parent.getAdapter().getItem(position).toString()).toString());
+//                MediaItem mediaItem = MediaItem.fromUri(winampSkin.playlistUri.get(parent.getAdapter().getItem(position).toString()).toString());
+//                exoPlayer.addMediaItem(mediaItem);
                 // Set the media item to be played.
-                exoPlayer.setMediaItem(mediaItem);
+
+                exoPlayer.clearMediaItems();
+
+                for (int i = position ; i < winampSkin.playlistElements.size() ; i ++) {
+                    exoPlayer.addMediaItem(MediaItem.fromUri(winampSkin.playlistUri.get(parent.getAdapter().getItem(i).toString()).toString()));
+                }
+
+                for (int i = 0 ; i < position ; i ++) {
+                    exoPlayer.addMediaItem(MediaItem.fromUri(winampSkin.playlistUri.get(parent.getAdapter().getItem(i).toString()).toString()));
+                }
+
                 // Prepare the player.
                 exoPlayer.prepare();
                 // Start the playback.
                 exoPlayer.play();
-
-
             }
         });
     }

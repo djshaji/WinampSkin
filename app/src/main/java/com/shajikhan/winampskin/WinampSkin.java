@@ -35,9 +35,11 @@ import java.util.HashMap;
 import java.util.List;
 
 public class WinampSkin {
-    Button prev, next, play, pause, stop, eject, shuffle, repeat, about ;
-    SeekBar seek ;
+    Button  prev, next, play, pause, stop, eject, shuffle, repeat, about,
+            eq_pl;
+    SeekBar seek, volume, balance ;
     MainActivity mainActivity ;
+    boolean shuffleState, repeatState ;
     Context context ;
     DisplayMetrics displayMetrics ;
     String TAG = "WinampSkin";
@@ -49,6 +51,9 @@ public class WinampSkin {
     HashMap playlistUri ;
     TextView bigClock, trackTitle ;
 
+    Canvas mainCanvas ;
+    Drawable mainDrawable ;
+    Paint paint ;
     ListView playlistView ;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
@@ -59,6 +64,7 @@ public class WinampSkin {
         mainActivity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         density = displayMetrics.scaledDensity;
 
+        paint = new Paint();
 //        setup();
     }
 
@@ -75,20 +81,26 @@ public class WinampSkin {
 //        Log.d(TAG, "setup: " + width / displayMetrics.scaledDensity  * 116f/275f);
         mainWindow.setLayoutParams(layoutParams);
 
-        setupMainWindow();
+        setupMainWindow(false, false);
         setupEqualizer();
         setupPlaylist();
     }
 
-    public void setupMainWindow () {
+    public void setupMainWindow (boolean shuffleActive, boolean repeatActive) {
         LinearLayout mainWindow = mainActivity.findViewById(R.id.main_window);
+        shuffleState = shuffleActive ;
+        repeatState = repeatActive ;
         seek = mainWindow.findViewById(R.id.seek_bar);
+        volume = mainWindow.findViewById(R.id.volume_bar);
         bigClock = mainWindow.findViewById(R.id.big_clock);
         trackTitle = mainWindow.findViewById(R.id.track_title);
+        eq_pl = mainWindow.findViewById(R.id.eq_pl);
 
         Drawable drawable = new Drawable() {
             @Override
             public void draw(@NonNull Canvas canvas) {
+                mainCanvas = canvas;
+                mainDrawable = this ;
                 setBounds(0, 0, convertDpToPixel(275), convertDpToPixel(116));
                 Paint paint = new Paint();
                 canvas.drawBitmap(
@@ -125,23 +137,48 @@ public class WinampSkin {
                         paint
                 );
                 //shuffle
-                canvas.drawBitmap(
-                        upscaleBitmap(//Bitmap.createScaledBitmap(
-                                getBitmap(28, 0, 45, 15, R.drawable.shufrep)),
-                        //convertDpToPixel(275), convertDpToPixel(16), true)),
-                        convertDpToPixel(164 * UPSCALE_FACTOR),
-                        convertDpToPixel(89 * UPSCALE_FACTOR),
-                        paint
-                );
+//                paintShuffle(false);
+                if (!shuffleActive) {
+                    canvas.drawBitmap(
+                            upscaleBitmap(//Bitmap.createScaledBitmap(
+                                    getBitmap(28, 0, 45, 15, R.drawable.shufrep)),
+                            //convertDpToPixel(275), convertDpToPixel(16), true)),
+                            convertDpToPixel(164 * UPSCALE_FACTOR),
+                            convertDpToPixel(89 * UPSCALE_FACTOR),
+                            paint
+                    );
+                } else {
+                    canvas.drawBitmap(
+                            upscaleBitmap(//Bitmap.createScaledBitmap(
+                                    getBitmap(28, 30, 45, 15, R.drawable.shufrep)),
+                            //convertDpToPixel(275), convertDpToPixel(16), true)),
+                            convertDpToPixel(164 * UPSCALE_FACTOR),
+                            convertDpToPixel(89 * UPSCALE_FACTOR),
+                            paint
+                    );
+
+                }
                 //repeat
-                canvas.drawBitmap(
-                        upscaleBitmap(//Bitmap.createScaledBitmap(
-                                getBitmap(0, 0, 29, 15, R.drawable.shufrep)),
-                        //convertDpToPixel(275), convertDpToPixel(16), true)),
-                        convertDpToPixel(209 * UPSCALE_FACTOR),
-                        convertDpToPixel(89 * UPSCALE_FACTOR),
-                        paint
-                );
+                if (! repeatActive) {
+                    canvas.drawBitmap(
+                            upscaleBitmap(//Bitmap.createScaledBitmap(
+                                    getBitmap(0, 0, 29, 15, R.drawable.shufrep)),
+                            //convertDpToPixel(275), convertDpToPixel(16), true)),
+                            convertDpToPixel(209 * UPSCALE_FACTOR),
+                            convertDpToPixel(89 * UPSCALE_FACTOR),
+                            paint
+                    );
+                } else {
+                    canvas.drawBitmap(
+                            upscaleBitmap(//Bitmap.createScaledBitmap(
+                                    getBitmap(0, 30, 29, 15, R.drawable.shufrep)),
+                            //convertDpToPixel(275), convertDpToPixel(16), true)),
+                            convertDpToPixel(209 * UPSCALE_FACTOR),
+                            convertDpToPixel(89 * UPSCALE_FACTOR),
+                            paint
+                    );
+                }
+
 
                 // stereo
                 canvas.drawBitmap(
@@ -715,4 +752,11 @@ public class WinampSkin {
 
     }
 
+    void paintShuffle (boolean active) {
+        setupMainWindow(active, repeatState);
+    }
+
+    void paintRepeat (boolean active) {
+        setupMainWindow(shuffleState, active);
+    }
 }
