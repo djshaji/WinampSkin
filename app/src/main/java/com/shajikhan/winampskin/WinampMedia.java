@@ -7,17 +7,25 @@ import static android.media.audiofx.AudioEffect.EXTRA_CONTENT_TYPE;
 import android.content.Context;
 import android.content.Intent;
 import android.media.audiofx.AudioEffect;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.SeekBar;
 
+import androidx.annotation.RequiresApi;
+
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.source.TrackGroupArray;
+import com.google.android.exoplayer2.trackselection.TrackSelection;
+import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.List;
 
@@ -28,6 +36,7 @@ public class WinampMedia {
     WinampSkin winampSkin ;
     ExoPlayer exoPlayer = null;
     Handler handler ;
+    WinampEqualizer winampEqualizer ;
 
     String shaji [][] = {
             // yay!
@@ -44,6 +53,7 @@ public class WinampMedia {
             {"We three", "https://music.shaji.in/media/Best%20of%20Solitude%20Saints/WeThree.mp3"},
     };
 
+    @RequiresApi(api = Build.VERSION_CODES.P)
     WinampMedia (Context _context, MainActivity _mainActivity) {
         context = _context ;
         mainActivity = _mainActivity ;
@@ -53,8 +63,40 @@ public class WinampMedia {
 //        play (shaji [shaji.length -1][0], shaji [shaji.length -1][1]);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.P)
     void setupPlayer () {
-        if (exoPlayer == null) exoPlayer = new SimpleExoPlayer.Builder(context).build();
+        if (exoPlayer == null) {
+            exoPlayer = new SimpleExoPlayer.Builder(context).build();
+            winampEqualizer = new WinampEqualizer(exoPlayer.getAudioComponent().getAudioSessionId());
+        }
+
+        exoPlayer.addListener(new Player.Listener() {
+            @Override
+            public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
+                int sourceIndex = exoPlayer.getCurrentWindowIndex();
+//                TrackSelection trackSelection = trackSelections.get(sourceIndex);
+                MediaItem mediaItem = exoPlayer.getCurrentMediaItem() ;
+                if (mediaItem == null) return ;
+                String uri = String.valueOf(exoPlayer.getCurrentMediaItem().mediaMetadata.title);
+                Log.d(TAG, "onTracksChanged: " + uri);
+
+            }
+        });
+
+        exoPlayer.addListener(new Player.Listener() {
+            @Override
+            public void onPositionDiscontinuity(Player.PositionInfo oldPosition, Player.PositionInfo newPosition, int reason) {
+                int sourceIndex = exoPlayer.getCurrentWindowIndex();
+                MediaItem mediaItem =  exoPlayer.getCurrentMediaItem() ;
+                if (mediaItem == null) return ;
+
+                Log.d(TAG, "onPositionDiscontinuity: " + mediaItem.playbackProperties.uri.getLastPathSegment());
+                winampSkin.trackTitle.setText(mediaItem.playbackProperties.uri.getLastPathSegment());
+
+
+            }
+        });
+
         if (handler == null) handler = new Handler();
 
         exoPlayer.addListener(new Player.Listener() {
@@ -180,7 +222,7 @@ public class WinampMedia {
 //        winampSkin.playlistAdd("Shaji - Savera", "https://music.shaji.in/media/No%20Destination%20(Preview)/savera.mp3");
 
         for (String []track: shaji) {
-            winampSkin.playlistAdd(track [0], track [1]);
+            winampSkin.playlistAdd(Uri.parse(track [1]).getLastPathSegment(), track [1]);
         }
 
         winampSkin.playlistView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
