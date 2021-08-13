@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:title="Featured music"
+        android:id="@+id/add_featured"
+        android:icon="@android:drawable/ic_media_play"/>
+    <item
+        android:title="Internet Radio"
+        android:id="@+id/add_radio"
+        android:icon="@android:drawable/btn_radio"/>
+    <item
+        android:icon="@android:drawable/ic_dialog_map"
+        android:id="@+id/add_url"
+        android:title="URL" />
+    <item
+        android:title="Local file"
+        android:id="@+id/add_local"
+        android:icon="@android:drawable/ic_menu_add"/>
+</menu>

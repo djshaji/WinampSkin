@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="Randomize List" />
+    <item android:title="Reverse List" />
+    <item android:title="Sort Selected" >
+        <menu>
+            <item android:title="By Genre"/>
+            <item android:title="By Title"/>
+            <item android:title="By Artist"/>
+            <item android:title="By Album"/>
+        </menu>
+    </item>
+
+    <item android:title="Sort List">
+        <menu>
+            <item android:title="By Genre"/>
+            <item android:title="By Title"/>
+            <item android:title="By Artist"/>
+            <item android:title="By Album"/>
+        </menu>
+    </item>
+</menu>

@@ -38,6 +38,7 @@ public class WinampSkin {
     Button  prev, next, play, pause, stop, eject, shuffle, repeat, about,
             eq_pl;
     SeekBar seek, volume, balance ;
+    LinearLayout mainWindow ;
     MainActivity mainActivity ;
     boolean shuffleState, repeatState ;
     Context context ;
@@ -46,6 +47,7 @@ public class WinampSkin {
     // FIXME: 7/24/21 Determine the following automagically
     float UPSCALE_FACTOR = 1.43f ;
     float density ;
+    public ArrayAdapter playlistAdapter ;
 
     List <String> playlistElements ;
     HashMap playlistUri ;
@@ -76,7 +78,7 @@ public class WinampSkin {
         Log.d(TAG, displayMetrics.toString());
         LinearLayout window = mainActivity.findViewById(R.id.window);
 
-        LinearLayout mainWindow = mainActivity.findViewById(R.id.main_window);
+        mainWindow = mainActivity.findViewById(R.id.main_window);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, convertDpToPixel((int) (width / displayMetrics.scaledDensity  * 116f/275f))) ;
 //        Log.d(TAG, "setup: " + width / displayMetrics.scaledDensity  * 116f/275f);
         mainWindow.setLayoutParams(layoutParams);
@@ -581,11 +583,15 @@ public class WinampSkin {
                 (Arrays.asList(songs));
 
         final ArrayAdapter< String > adapter = new ArrayAdapter < String >
-                (context, R.layout.listview,
+                (context,
+//                        R.layout.listview,
+                        android.R.layout.simple_list_item_activated_1,
                         ListElementsArrayList);
 
         ListView listView = (ListView) mainActivity.findViewById(R.id.playlist_view);
         listView.setAdapter(adapter);
+        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+        playlistAdapter = adapter ;
 
         playlistView = listView ;
         /*
@@ -610,7 +616,7 @@ public class WinampSkin {
     public void playlistAdd (String track, String uri) {
         playlistElements.add(track);
         playlistUri.put (track, uri);
-
+        playlistAdapter.notifyDataSetChanged();
     }
 
     public Bitmap getBitmap (float x, float y, float width, float height, int resource) {
@@ -758,5 +764,12 @@ public class WinampSkin {
 
     void paintRepeat (boolean active) {
         setupMainWindow(shuffleState, active);
+    }
+
+    public void playlistClear () {
+        playlistElements.clear();
+        playlistUri.clear();
+        playlistAdapter.notifyDataSetChanged();
+
     }
 }

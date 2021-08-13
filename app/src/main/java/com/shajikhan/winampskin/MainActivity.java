@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -14,9 +15,11 @@ import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
+import com.google.android.exoplayer2.MediaItem;
 import com.google.android.material.snackbar.Snackbar;
 
 import androidx.annotation.NonNull;
@@ -57,7 +60,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-
+    String TAG = "Main Activity";
     // HJ Story
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
@@ -91,4 +94,27 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         winampMedia.destroy ();
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == winampMedia.OPEN_FILE && resultCode == RESULT_OK) {
+            Uri fullPhotoUri = data.getData();
+            if (fullPhotoUri != null) {
+                Log.d(TAG, "onActivityResult: adding local track " + data.toString());
+                winampSkin.playlistAdd(fullPhotoUri.getLastPathSegment(), fullPhotoUri.toString());
+                winampMedia.exoPlayer.addMediaItem(MediaItem.fromUri(fullPhotoUri));
+            } else {
+                int count = data.getClipData().getItemCount(),
+                        i = 0 ;
+                for (i = 0 ; i < count ; i ++) {
+                    Uri imageUri = data.getClipData().getItemAt(i).getUri();
+                    winampSkin.playlistAdd(imageUri.getLastPathSegment(), imageUri.toString());
+                    winampMedia.exoPlayer.addMediaItem(MediaItem.fromUri(imageUri));
+                }
+            }
+        }
+    }
+
+
 }

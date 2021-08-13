@@ -1,18 +1,29 @@
 package com.shajikhan.winampskin;
 
+import static android.app.Activity.RESULT_OK;
 import static android.media.audiofx.AudioEffect.CONTENT_TYPE_MUSIC;
 import static android.media.audiofx.AudioEffect.EXTRA_AUDIO_SESSION;
 import static android.media.audiofx.AudioEffect.EXTRA_CONTENT_TYPE;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.audiofx.AudioEffect;
+import android.media.audiofx.DynamicsProcessing;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
+import android.text.Editable;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.PopupMenu;
 import android.widget.SeekBar;
 
 import androidx.annotation.RequiresApi;
@@ -35,8 +46,12 @@ public class WinampMedia {
     MainActivity mainActivity ;
     WinampSkin winampSkin ;
     ExoPlayer exoPlayer = null;
+    PopupMenu playlistMenuAdd, playlistMenuRemove,
+            playlistMenuSelect,  getPlaylistMenuLoad,
+            playlistMenuMisc;
     Handler handler ;
     WinampEqualizer winampEqualizer ;
+    int OPEN_FILE = 1 ;
 
     String shaji [][] = {
             // yay!
@@ -60,6 +75,8 @@ public class WinampMedia {
         winampSkin = mainActivity.winampSkin;
         setupPlayer();
         setupPlaylist();
+        setupPlaylistMenu();
+        setupEqualizer();
 //        play (shaji [shaji.length -1][0], shaji [shaji.length -1][1]);
     }
 
@@ -257,6 +274,7 @@ public class WinampMedia {
 
     public void destroy () {
         exoPlayer.release();
+        winampEqualizer.destroy();
     }
 
     private void updateProgressBar() {
@@ -312,6 +330,213 @@ public class WinampMedia {
         exoPlayer.setMediaItem(mediaItem);
         exoPlayer.prepare();
         exoPlayer.play();
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.P)
+    public void setupEqualizer () {
+        int [] bars  = {
+                R.id.equalizer_60,
+                R.id.equalizer_170,
+                R.id.equalizer_310,
+                R.id.equalizer_600,
+                R.id.equalizer_1000,
+                R.id.equalizer_3000,
+                R.id.equalizer_6000,
+                R.id.equalizer_12000,
+                R.id.equalizer_14000,
+                R.id.equalizer_16000
+        };
+
+        for (int i = 0 ; i < 10 ; i ++) {
+            SeekBar seekBar = mainActivity.findViewById(bars [i]) ;
+            int finalI = i;
+            seekBar.setProgress((int) ((winampEqualizer.eq.getBand(i).getGain() * (10 / 3)) + 50));
+            int finalI1 = i;
+            seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @RequiresApi(api = Build.VERSION_CODES.P)
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    DynamicsProcessing.EqBand eq = winampEqualizer.dynamicsProcessing.getConfig().getChannelByChannelIndex(0).getPreEq().getBand(finalI);
+                    eq.setGain((progress - 50) * 3 / 10);
+                    Log.d(TAG, String.format("onProgressChanged: setting eq %d -> %d", finalI1, (progress - 50) * 3 / 10));
+//                    Log.d(TAG, String.format("onProgressChanged: %s", winampEqualizer.eq.toString()));
+//                    winampEqualizer.dynamicsProcessing.setEnabled(false);
+//                    winampEqualizer.dynamicsProcessing.setEnabled(true);
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+
+                }
+            });
+        }
+    }
+
+    void setupPlaylistMenu () {
+        Button  b = mainActivity.findViewById(R.id.playlist_add),
+                r = mainActivity.findViewById(R.id.playlist_remove),
+                s = mainActivity.findViewById(R.id.playlist_select),
+                m = mainActivity.findViewById(R.id.playlist_misc),
+                l = mainActivity.findViewById(R.id.playlist_load) ;
+
+        playlistMenuAdd = new PopupMenu(mainActivity.context, b);
+        MenuInflater inflater = playlistMenuAdd.getMenuInflater();
+        inflater.inflate(R.menu.playlist_add, playlistMenuAdd.getMenu());
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                playlistMenuAdd.show();
+            }
+        });
+
+        playlistMenuRemove = new PopupMenu(context, r);
+        playlistMenuRemove.inflate(R.menu.playlist_remove);
+        r.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                playlistMenuRemove.show();
+            }
+        });
+
+        playlistMenuSelect = new PopupMenu(context, s);
+        playlistMenuSelect.inflate(R.menu.playlist_select);
+        s.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                playlistMenuSelect.show();
+            }
+        });
+
+        playlistMenuSelect = new PopupMenu(context, s);
+        playlistMenuSelect.inflate(R.menu.playlist_select);
+        s.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                playlistMenuSelect.show();
+            }
+        });
+
+        getPlaylistMenuLoad = new PopupMenu(context, l);
+        getPlaylistMenuLoad.inflate(R.menu.playlist_load);
+        l.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getPlaylistMenuLoad.show();
+            }
+        });
+
+        playlistMenuMisc = new PopupMenu(context, m);
+        playlistMenuMisc.inflate(R.menu.playlist_misc);
+        m.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                playlistMenuMisc.show();
+            }
+        });
+
+        // intents for all the menu items
+        playlistMenuRemove.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    default:
+                        break;
+                    case R.id.playlist_remove_all:
+                        winampSkin.playlistClear();
+                        exoPlayer.clearMediaItems();
+                        break ;
+                    case R.id.playlist_remove_selected:
+
+                        break ;
+                }
+                    return false;
+            }
+        });
+
+        playlistMenuAdd.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    default:
+                        break ;
+                    case R.id.add_local:
+                        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                        intent.setType("audio/*");
+                        intent.addCategory(Intent.CATEGORY_OPENABLE);
+                        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                        mainActivity.startActivityForResult(intent, OPEN_FILE);
+                        break ;
+
+                    case R.id.add_url:
+                        addUrl();
+                        break;
+                }
+                return false;
+            }
+        });
+
+        playlistMenuSelect.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    default:
+                        break ;
+                    case R.id.playlist_select_all:
+                        for (int i = 0 ; i < winampSkin.playlistView.getChildCount() ; i ++) {
+                            winampSkin.playlistView.setItemChecked(i, true);
+                        }
+                        break ;
+                    case R.id.playlist_select_none:
+                        for (int i = 0 ; i < winampSkin.playlistView.getChildCount() ; i ++) {
+                            winampSkin.playlistView.setItemChecked(i, false);
+                        }
+                        break ;
+                    case R.id.playlist_select_invert:
+                        for (int i = 0 ; i < winampSkin.playlistView.getChildCount() ; i ++) {
+                            winampSkin.playlistView.setItemChecked(i, ! winampSkin.playlistView.isItemChecked(i));
+                        }
+                        break ;
+                }
+
+                return false;
+            }
+        });
+    }
+
+    public void addUrl () {
+        AlertDialog.Builder alert = new AlertDialog.Builder(mainActivity);
+        final EditText edittext = new EditText(mainActivity);
+        alert.setMessage("Add URL");
+        alert.setTitle(R.string.app_name);
+
+        alert.setView(edittext);
+        edittext.setPadding(10,10,10,10);
+
+        alert.setPositiveButton("Add", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                //What ever you want to do with the value
+//                Editable YouEditTextValue = edittext.getText();
+                //OR
+                String YouEditTextValue = edittext.getText().toString();
+                winampSkin.playlistAdd(Uri.parse(YouEditTextValue).getLastPathSegment(), YouEditTextValue.toString());
+                exoPlayer.addMediaItem(MediaItem.fromUri(YouEditTextValue));
+
+            }
+        });
+
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                // what ever you want to do with No option.
+            }
+        });
+
+        alert.show();
 
     }
 }

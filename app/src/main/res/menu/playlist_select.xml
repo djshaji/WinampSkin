@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item   android:title="Invert"
+            android:id="@+id/playlist_select_invert"/>
+    <item android:title="All"
+        android:id="@+id/playlist_select_all"/>
+    <item android:title="None"
+        android:id="@+id/playlist_select_none"/>
+</menu>
