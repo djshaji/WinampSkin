@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.Matrix;
 import android.graphics.Paint;
@@ -476,6 +477,24 @@ public class WinampSkin {
                 int canvasHeight = convertDpToPixel((height / displayMetrics.scaledDensity) - (116+116)) ;
                 Paint paint = new Paint();
                 Bitmap topLeft = getBitmap(0,0,24,20, R.drawable.pledit);
+
+                /*  So now the problem is that the playlist is drawn with a white
+                    background in normal mode, and black background in dark mode.
+
+                    So we try to paint the background with a portion from the
+                    playlist bitmap
+                 */
+                for (int j = 1 ; j < 19 ; j ++) {
+                    for (int t = 1; t < 21; t++) {
+                        canvas.drawBitmap(
+                                upscaleBitmap(getBitmap(208, 10, 17f, 18, R.drawable.pledit)),
+                                convertDpToPixel(17 * t),
+                                convertDpToPixel(25 * j),
+                                paint
+                        );
+                    }
+                }
+
                 canvas.drawBitmap(upscaleBitmap(topLeft), 0, 0, paint);
                 Bitmap topLeftEx = upscaleBitmap(getBitmap(127.5f,0,24f,20, R.drawable.pledit));
                 for (int i = 1 ; i < 6 ; i ++) {
@@ -586,12 +605,34 @@ public class WinampSkin {
                 (context,
 //                        R.layout.listview,
                         android.R.layout.simple_list_item_activated_1,
-                        ListElementsArrayList);
+                        ListElementsArrayList) {
+
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View view =super.getView(position, convertView, parent);
+
+                TextView textView=(TextView) view.findViewById(android.R.id.text1);
+
+                /*YOUR CHOICE OF COLOR*/
+                textView.setTextColor(Color.WHITE);
+
+                return view;
+            }
+        };
 
         ListView listView = (ListView) mainActivity.findViewById(R.id.playlist_view);
         listView.setAdapter(adapter);
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         playlistAdapter = adapter ;
+//        listView.setBackgroundColor(mainActivity.getResources().getColor(R.color.Winamp3));
+
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                listView.setSelection(position);
+                return false;
+            }
+        });
 
         playlistView = listView ;
         /*
@@ -769,6 +810,18 @@ public class WinampSkin {
     public void playlistClear () {
         playlistElements.clear();
         playlistUri.clear();
+        playlistAdapter.notifyDataSetChanged();
+
+    }
+
+    public void playlistRemove (int position) {
+        if (position >= playlistUri.size() || position > playlistElements.size())
+            return;
+        Log.d(TAG, "playlistRemove: " + playlistUri.toString());
+        Log.d(TAG, "playlistRemove: " + playlistElements.toString());
+        Log.d(TAG, "playlistRemove: " + playlistElements.get (position).toString());
+        playlistUri.remove (playlistElements.get (position));
+        playlistElements.remove(position);
         playlistAdapter.notifyDataSetChanged();
 
     }

@@ -87,6 +87,9 @@ public class MainActivity extends AppCompatActivity {
 //        setup();
 //        progressDialog.cancel();
 //        Log.d(TAG, "onCreate: Setup complete");
+//        winampMedia.exoPlayer.addMediaItem(MediaItem.fromUri("https://cdn.rawgit.com/captbaritone/webamp/43434d82/mp3/llama-2.91.mp3"));
+//        winampMedia.exoPlayer.play();
+
     }
 
     @Override

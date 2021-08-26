@@ -16,6 +16,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.text.Editable;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -242,6 +243,11 @@ public class WinampMedia {
             winampSkin.playlistAdd(Uri.parse(track [1]).getLastPathSegment(), track [1]);
         }
 
+        Log.d(TAG, "setupPlaylist: " +
+                winampSkin.playlistElements.toString() + "\n"+
+                winampSkin.playlistUri.toString() + "\n"
+                );
+
         winampSkin.playlistView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -444,6 +450,7 @@ public class WinampMedia {
         playlistMenuRemove.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
+                SparseBooleanArray checked = winampSkin.playlistView.getCheckedItemPositions();
                 switch (item.getItemId()) {
                     default:
                         break;
@@ -452,10 +459,30 @@ public class WinampMedia {
                         exoPlayer.clearMediaItems();
                         break ;
                     case R.id.playlist_remove_selected:
+//                        for (int i = 0 ; i < winampSkin.playlistView.getChildCount() ; i ++) {
+//                            if (winampSkin.playlistView.isItemChecked(i))
+//                                winampSkin.playlistRemove(i);
+//                        }
+
+                        for (int i = 0; i < winampSkin.playlistView.getAdapter().getCount(); i++) {
+                            if (checked.get(i)) {
+                                winampSkin.playlistRemove(i);
+                                // Do something
+                            }
+                        }
+
+                        break ;
+                    case R.id.playlist_remove_unselected:
+                        for (int i = 0; i < winampSkin.playlistView.getAdapter().getCount(); i++) {
+                            if (!checked.get(i)) {
+                                winampSkin.playlistRemove(i);
+                                // Do something
+                            }
+                        }
 
                         break ;
                 }
-                    return false;
+                    return true;
             }
         });
 
