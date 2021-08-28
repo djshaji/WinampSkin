@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "514890709742",
+    "project_id": "xenamp-android",
+    "storage_bucket": "xenamp-android.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:514890709742:android:cc79fd154fded8125051ff",
+        "android_client_info": {
+          "package_name": "com.shajikhan.winampskin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "514890709742-fu1aude2459gr51bgs0s9e0i7d1sebnl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBUJ7qQGITlkvwM9CAjmUQCcJqpKJbdLMQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "514890709742-fu1aude2459gr51bgs0s9e0i7d1sebnl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

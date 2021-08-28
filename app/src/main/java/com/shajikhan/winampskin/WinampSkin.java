@@ -32,10 +32,12 @@ import androidx.annotation.RequiresApi;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
 public class WinampSkin {
+    Skin skin;
     Button  prev, next, play, pause, stop, eject, shuffle, repeat, about,
             eq_pl;
     SeekBar seek, volume, balance ;
@@ -68,6 +70,7 @@ public class WinampSkin {
         density = displayMetrics.scaledDensity;
 
         paint = new Paint();
+        skin = new Skin(true);
 //        setup();
     }
 
@@ -84,12 +87,12 @@ public class WinampSkin {
 //        Log.d(TAG, "setup: " + width / displayMetrics.scaledDensity  * 116f/275f);
         mainWindow.setLayoutParams(layoutParams);
 
-        setupMainWindow(false, false);
+        setupMainWindow(skin, false, false);
         setupEqualizer();
         setupPlaylist();
     }
 
-    public void setupMainWindow (boolean shuffleActive, boolean repeatActive) {
+    public void setupMainWindow (Skin skin, boolean shuffleActive, boolean repeatActive) {
         LinearLayout mainWindow = mainActivity.findViewById(R.id.main_window);
         shuffleState = shuffleActive ;
         repeatState = repeatActive ;
@@ -660,12 +663,33 @@ public class WinampSkin {
         playlistAdapter.notifyDataSetChanged();
     }
 
+    public void playlistShuffle () {
+        Collections.shuffle(playlistElements);
+        playlistAdapter.notifyDataSetChanged();
+    }
+
+    public void playlistReverse () {
+        Collections.reverse(playlistElements);
+        playlistAdapter.notifyDataSetChanged();
+    }
+
     public Bitmap getBitmap (float x, float y, float width, float height, int resource) {
         Bitmap mBitmap = BitmapFactory.decodeResource(mainActivity.getResources(), resource) ;
         mBitmap = Bitmap.createBitmap(mBitmap, convertDpToPixel(x), convertDpToPixel(y), convertDpToPixel(width), convertDpToPixel(height));
 
         return mBitmap ;
     }
+
+    public Bitmap loadSkinBitmap (float x, float y, float width, float height, Skin skin, String resource) {
+        Bitmap mBitmap ;
+        if (skin.bitmaps.get (resource) instanceof Integer)
+            mBitmap = BitmapFactory.decodeResource(mainActivity.getResources(), (Integer) skin.bitmaps.get(resource)) ;
+        else
+            mBitmap = Bitmap.createBitmap(mBitmap, convertDpToPixel(x), convertDpToPixel(y), convertDpToPixel(width), convertDpToPixel(height));
+
+        return mBitmap ;
+    }
+
 
     public Bitmap upscaleBitmap (Bitmap bitmap) {
         return Bitmap.createScaledBitmap(bitmap,

@@ -38,6 +38,7 @@ import com.google.android.exoplayer2.trackselection.TrackSelection;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 
 import java.net.URI;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -187,6 +188,14 @@ public class WinampMedia {
 
                 mainActivity.startActivityForResult(eqIntent, 0);
 
+            }
+        });
+
+        winampSkin.about.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent eqIntent = new Intent(mainActivity, SkinBrowser.class);
+                mainActivity.startActivityForResult(eqIntent, 0);
             }
         });
 
@@ -503,6 +512,23 @@ public class WinampMedia {
                     case R.id.add_url:
                         addUrl();
                         break;
+                }
+                return false;
+            }
+        });
+
+        playlistMenuMisc.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    default:
+                        break ;
+                    case R.id.misc_randomize:
+                        winampSkin.playlistShuffle();
+                        break ;
+                    case R.id.misc_reverse:
+                        winampSkin.playlistReverse();
+                        break ;
                 }
                 return false;
             }

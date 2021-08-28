@@ -3,6 +3,7 @@
     package="com.shajikhan.winampskin">
 
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher_foreground"
@@ -10,6 +11,9 @@
         android:roundIcon="@mipmap/ic_launcher_foreground"
         android:supportsRtl="true"
         android:theme="@style/Theme.WinampSkin">
+        <activity
+            android:name=".SkinBrowser"
+            android:exported="true" />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"

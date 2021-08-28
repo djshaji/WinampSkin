@@ -2,23 +2,33 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:title="Randomize List" />
-    <item android:title="Reverse List" />
+    <item android:title="Randomize List"
+        android:id="@+id/misc_randomize"/>
+    <item android:title="Reverse List"
+        android:id="@+id/misc_reverse"/>
     <item android:title="Sort Selected" >
         <menu>
-            <item android:title="By Genre"/>
-            <item android:title="By Title"/>
-            <item android:title="By Artist"/>
-            <item android:title="By Album"/>
+            <item android:title="By Genre"
+                android:id="@+id/sort_selected_genre"/>
+            <item android:title="By Title"
+                android:id="@+id/sort_selected_title"/>
+            <item android:title="By Artist"
+                android:id="@+id/sort_selected_artist"/>
+            <item android:title="By Album"
+                android:id="@+id/sort_selected_album"/>
         </menu>
     </item>
 
     <item android:title="Sort List">
         <menu>
-            <item android:title="By Genre"/>
-            <item android:title="By Title"/>
-            <item android:title="By Artist"/>
-            <item android:title="By Album"/>
+            <item android:title="By Genre"
+                android:id="@+id/sort_genre"/>
+            <item android:title="By Title"
+                android:id="@+id/sort_title"/>
+            <item android:title="By Artist"
+                android:id="@+id/sort_artist"/>
+            <item android:title="By Album"
+                android:id="@+id/sort_album"/>
         </menu>
     </item>
 </menu>
