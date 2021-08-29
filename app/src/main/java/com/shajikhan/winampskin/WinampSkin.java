@@ -30,6 +30,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -110,7 +111,8 @@ public class WinampSkin {
                 setBounds(0, 0, convertDpToPixel(275), convertDpToPixel(116));
                 Paint paint = new Paint();
                 canvas.drawBitmap(
-                        upscaleBitmap(getBitmap(0, 0, 275, 116, R.drawable.main)),
+                        upscaleBitmap(
+                        loadSkinBitmap(0, 0, 275, 116, skin, "main")),
                         0,
                         0,
                         paint
@@ -118,7 +120,7 @@ public class WinampSkin {
                 // titlebar
                 canvas.drawBitmap(
                         upscaleBitmap(//Bitmap.createScaledBitmap(
-                                getBitmap(27, 57, 275, 13, R.drawable.titlebar)),
+                                loadSkinBitmap(27, 57, 275, 13, skin, "titlebar")),
                         //convertDpToPixel(275), convertDpToPixel(16), true)),
                         0,
                         convertDpToPixel(3),
@@ -127,7 +129,7 @@ public class WinampSkin {
                 // cbuttons
                 canvas.drawBitmap(
                         upscaleBitmap(//Bitmap.createScaledBitmap(
-                                getBitmap(0, 0, 114, 18, R.drawable.cbuttons)),
+                                loadSkinBitmap(0, 0, 114, 18, skin,"cbuttons")),
                         //convertDpToPixel(275), convertDpToPixel(16), true)),
                         convertDpToPixel(15 * UPSCALE_FACTOR) + 3,
                         convertDpToPixel(87 * UPSCALE_FACTOR) + 3,
@@ -136,7 +138,7 @@ public class WinampSkin {
                 //eject
                 canvas.drawBitmap(
                         upscaleBitmap(//Bitmap.createScaledBitmap(
-                                getBitmap(115, 0, 21, 16, R.drawable.cbuttons)),
+                                loadSkinBitmap(115, 0, 21, 16, skin,"cbuttons")),
                         //convertDpToPixel(275), convertDpToPixel(16), true)),
                         convertDpToPixel(136 * UPSCALE_FACTOR) + 3,
                         convertDpToPixel(88 * UPSCALE_FACTOR) + 3,
@@ -147,7 +149,7 @@ public class WinampSkin {
                 if (!shuffleActive) {
                     canvas.drawBitmap(
                             upscaleBitmap(//Bitmap.createScaledBitmap(
-                                    getBitmap(28, 0, 45, 15, R.drawable.shufrep)),
+                                    loadSkinBitmap(28, 0, 45, 15, skin,"shufrep")),
                             //convertDpToPixel(275), convertDpToPixel(16), true)),
                             convertDpToPixel(164 * UPSCALE_FACTOR),
                             convertDpToPixel(89 * UPSCALE_FACTOR),
@@ -341,7 +343,7 @@ public class WinampSkin {
                 Paint paint = new Paint();
                 // Because we have to change the drawable we apply to the layout, we have to draw the eq main
                 canvas.drawBitmap(
-                        upscaleBitmap(getBitmap(0, 0, 275, 116, R.drawable.eqmain)),
+                        upscaleBitmap(loadSkinBitmap(0, 0, 275, 116, skin,"eqmain")),
                         0,
                         0,
                         paint
@@ -350,7 +352,7 @@ public class WinampSkin {
                 canvas.drawBitmap(
                         upscaleBitmap(//getBitmap(0, 134f, 275, 13.5f, R.drawable.eqmain)),
                                 Bitmap.createScaledBitmap(
-                                        getBitmap(0, 134f, 275, 13.5f, R.drawable.eqmain),
+                                        loadSkinBitmap(0, 134f, 275, 13.5f, skin, "eqmain"),
                                         convertDpToPixel(275), convertDpToPixel(15), true
                                 )
                         ),
@@ -362,7 +364,7 @@ public class WinampSkin {
                 canvas.drawBitmap(
                         upscaleBitmap(
                                 Bitmap.createScaledBitmap(
-                                        getBitmap(0, 294f, 113, 19, R.drawable.eqmain),
+                                        loadSkinBitmap(0, 294f, 113, 19, skin, "eqmain"),
                                         convertDpToPixel(113), convertDpToPixel(19), true
                                 )
                         ),
@@ -376,7 +378,7 @@ public class WinampSkin {
                     canvas.drawBitmap(
                             upscaleBitmap(//getBitmap(28.5f, 164.5f, 13.5f, 63f, R.drawable.eqmain)
                                     Bitmap.createScaledBitmap(
-                                            getBitmap(28.8f, 164.5f, 13f, 63, R.drawable.eqmain),
+                                            loadSkinBitmap(28.8f, 164.5f, 13f, 63, skin, "eqmain"),
                                             convertDpToPixel(16), convertDpToPixel(65), true
                                     )
                             ),
@@ -479,7 +481,7 @@ public class WinampSkin {
                 this.setBounds(0, 0, width, convertDpToPixel((height / displayMetrics.scaledDensity) - (116+116)));
                 int canvasHeight = convertDpToPixel((height / displayMetrics.scaledDensity) - (116+116)) ;
                 Paint paint = new Paint();
-                Bitmap topLeft = getBitmap(0,0,24,20, R.drawable.pledit);
+                Bitmap topLeft = loadSkinBitmap(0,0,24,20, skin, "pledit");
 
                 /*  So now the problem is that the playlist is drawn with a white
                     background in normal mode, and black background in dark mode.
@@ -490,7 +492,7 @@ public class WinampSkin {
                 for (int j = 1 ; j < 19 ; j ++) {
                     for (int t = 1; t < 21; t++) {
                         canvas.drawBitmap(
-                                upscaleBitmap(getBitmap(208, 10, 17f, 18, R.drawable.pledit)),
+                                upscaleBitmap(loadSkinBitmap(208, 10, 17f, 18, skin, "pledit")),
                                 convertDpToPixel(17 * t),
                                 convertDpToPixel(25 * j),
                                 paint
@@ -499,7 +501,7 @@ public class WinampSkin {
                 }
 
                 canvas.drawBitmap(upscaleBitmap(topLeft), 0, 0, paint);
-                Bitmap topLeftEx = upscaleBitmap(getBitmap(127.5f,0,24f,20, R.drawable.pledit));
+                Bitmap topLeftEx = upscaleBitmap(loadSkinBitmap(127.5f,0,24f,20, skin, "pledit"));
                 for (int i = 1 ; i < 6 ; i ++) {
                     canvas.drawBitmap(topLeftEx, convertDpToPixel(24) * i, 0, paint);
                 }
@@ -510,14 +512,14 @@ public class WinampSkin {
 
                 // top right
                 canvas.drawBitmap(
-                        upscaleBitmap(getBitmap(153.5f, 0, 24f, 20, R.drawable.pledit)),
+                        upscaleBitmap(loadSkinBitmap(153.5f, 0, 24f, 20, skin, "pledit")),
 //                        convertDpToPixel(24 * 15f),
                         displayMetrics.widthPixels - convertDpToPixel(24 * UPSCALE_FACTOR),
                         0,
                         paint
                 );
 
-                Bitmap left = upscaleBitmap(getBitmap(0,42.5f,12,29, R.drawable.pledit));
+                Bitmap left = upscaleBitmap(loadSkinBitmap(0,42.5f,12,29, skin, "pledit"));
                 canvas.drawBitmap(left, 0, convertDpToPixel(20.5f), paint);
                 for (int i = 2 ; i < 30 ; i ++) {
                     canvas.drawBitmap(left, 0, i * convertDpToPixel(20 * UPSCALE_FACTOR), paint);
@@ -527,7 +529,7 @@ public class WinampSkin {
                         break ;
                 }
 
-                Bitmap right = upscaleBitmap(getBitmap(31f,42.5f,20f,29, R.drawable.pledit));
+                Bitmap right = upscaleBitmap(loadSkinBitmap(31f,42.5f,20f,29, skin, "pledit"));
 //                canvas.drawBitmap(right, displayMetrics.widthPixels - convertDpToPixel(21f), convertDpToPixel(20.5f), paint);
                 canvas.drawBitmap(right, displayMetrics.widthPixels - convertDpToPixel(20 * UPSCALE_FACTOR), convertDpToPixel(20 * UPSCALE_FACTOR), paint);
                 for (int i = 2 ; i < 30 ; i ++) {
@@ -541,7 +543,7 @@ public class WinampSkin {
 
                 // top winamp bar
                 canvas.drawBitmap(
-                        upscaleBitmap(getBitmap(26.5f, 0, 99f, 20, R.drawable.pledit)),
+                        upscaleBitmap(loadSkinBitmap(26.5f, 0, 99f, 20, skin, "pledit")),
                         convertDpToPixel(24 * 6f),
                         0,
                         paint
@@ -550,7 +552,7 @@ public class WinampSkin {
                 // bottom bar
                 for (int i = 0 ; i < 24 * 5 ; i = i + 24) {
                     canvas.drawBitmap(
-                            upscaleBitmap(getBitmap(179.5f, 0.5f, 24, 37.5f, R.drawable.pledit)),
+                            upscaleBitmap(loadSkinBitmap(179.5f, 0.5f, 24, 37.5f, skin, "pledit")),
                             convertDpToPixel(i + 124f),
                             displayMetrics.heightPixels - convertDpToPixel(212)  - convertDpToPixel(38 * displayMetrics.scaledDensity * UPSCALE_FACTOR),
                             paint
@@ -559,7 +561,7 @@ public class WinampSkin {
 
                 // bottom left
                 canvas.drawBitmap(
-                        upscaleBitmap(getBitmap(0, 72.5f, 124.5f, 37.5f, R.drawable.pledit)),
+                        upscaleBitmap(loadSkinBitmap(0, 72.5f, 124.5f, 37.5f, skin, "pledit")),
                         0,
 //                        displayMetrics.heightPixels - (convertDpToPixel(232) + convertDpToPixel(38 * UPSCALE_FACTOR)),
                         displayMetrics.heightPixels - convertDpToPixel(212)  - convertDpToPixel(38 * displayMetrics.scaledDensity * UPSCALE_FACTOR),
@@ -569,7 +571,7 @@ public class WinampSkin {
 
                 //bottom right
                 canvas.drawBitmap(
-                        upscaleBitmap(getBitmap(126.5f, 72.5f, 149.5f, 37.5f, R.drawable.pledit)),
+                        upscaleBitmap(loadSkinBitmap(126.5f, 72.5f, 149.5f, 37.5f, skin, "pledit")),
                         displayMetrics.widthPixels - convertDpToPixel(149.5f * UPSCALE_FACTOR),
                         displayMetrics.heightPixels - convertDpToPixel(212) - convertDpToPixel(38f * displayMetrics.scaledDensity * UPSCALE_FACTOR),
                         paint
@@ -681,12 +683,14 @@ public class WinampSkin {
     }
 
     public Bitmap loadSkinBitmap (float x, float y, float width, float height, Skin skin, String resource) {
-        Bitmap mBitmap ;
-        if (skin.bitmaps.get (resource) instanceof Integer)
-            mBitmap = BitmapFactory.decodeResource(mainActivity.getResources(), (Integer) skin.bitmaps.get(resource)) ;
-        else
-            mBitmap = Bitmap.createBitmap(mBitmap, convertDpToPixel(x), convertDpToPixel(y), convertDpToPixel(width), convertDpToPixel(height));
+        Bitmap mBitmap = null ;
+        if (skin.resourceType == Skin.ResourceType.RESOURCE) {
+            mBitmap = BitmapFactory.decodeResource(mainActivity.getResources(), (Integer) skin.bitmaps.get(resource));
+        } else {
+            mBitmap = BitmapFactory.decodeFile(new File((String) skin.bitmaps.get("resource")).getAbsolutePath());
+        }
 
+        mBitmap = Bitmap.createBitmap(mBitmap, convertDpToPixel(x), convertDpToPixel(y), convertDpToPixel(width), convertDpToPixel(height));
         return mBitmap ;
     }
 
@@ -824,11 +828,11 @@ public class WinampSkin {
     }
 
     void paintShuffle (boolean active) {
-        setupMainWindow(active, repeatState);
+        setupMainWindow(skin, active, repeatState);
     }
 
     void paintRepeat (boolean active) {
-        setupMainWindow(shuffleState, active);
+        setupMainWindow(skin, shuffleState, active);
     }
 
     public void playlistClear () {
