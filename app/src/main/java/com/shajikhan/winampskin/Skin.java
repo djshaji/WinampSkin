@@ -1,17 +1,36 @@
 package com.shajikhan.winampskin;
 
+import android.content.Context;
+import android.os.AsyncTask;
+import android.util.Log;
+
+import com.wwdablu.soumya.wzip.WZip;
+import com.wwdablu.soumya.wzip.WZipCallback;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashMap;
 
 public class Skin {
+    String TAG = "Skin";
+    public String skinDir ;
     HashMap bitmaps ;
     public enum ResourceType {
         RESOURCE,
         FILE
     }
 
+    Context context ;
     ResourceType resourceType ;
 
-    Skin (boolean def) {
+    Skin (Context _context, boolean def) {
+        context = _context;
         if (def) {
             bitmaps = new HashMap <String, Integer>();
             resourceType = ResourceType.RESOURCE;
@@ -20,6 +39,7 @@ public class Skin {
         else {
             bitmaps =  new HashMap <String, String> ();
             resourceType = ResourceType.FILE;
+            loadfromDir(null);
         }
     }
 
@@ -52,10 +72,21 @@ public class Skin {
 
     public void loadfromDir (String dir) {
         if (dir == null)
-             dir = "/Xenamp/Skins/.current/" ;
+             dir = context.getFilesDir().toString() + "/Skins/current";
+
+        bitmaps = new HashMap <String, Integer>();
+        resourceType = ResourceType.RESOURCE;
+
+        File f = new File(dir);
+        File[] files = f.listFiles();
+        if (files == null) {
+            Log.e(TAG, "Cannot read requested skin: " + dir + "! Fallback to inbuilt default." );
+            loadDefault();
+            return;
+        }
 
         resourceType = ResourceType.FILE;
-
+        skinDir = dir ;
         bitmaps.put("avs", dir + "avs");
         bitmaps.put("balance", dir + "balance");
         bitmaps.put("cbuttons", dir + "cbuttons");
@@ -81,4 +112,122 @@ public class Skin {
         bitmaps.put("volume", dir + "volume");
         bitmaps.put("volume_thumb", dir + "volume_thumb");
     }
+
+    public void renameSkinFiles (String dir) {
+        Log.e(TAG, "renameSkinFiles: Renaming files in " + dir);
+        File f = new File(dir);
+        File[] files = f.listFiles();
+        if (files == null) {
+            Log.e(TAG, "renameSkinFiles: unable to get directory listing!" );
+        }
+        Log.e(TAG, "renameSkinFiles: Files found:"+ files.toString());
+        for (File inFile : files) {
+            if (! inFile.isDirectory()) {
+                inFile.renameTo(new File (inFile.toString().toLowerCase()));
+            }
+        }
+
+    }
+
+    void unzipCallback () {
+        Log.d(TAG, "unzipCallback: Complete!");
+    }
+
+    public void downloadSkin (String url) {
+        new DownloadSkin().execute(url);
+    }
+
+    public class DownloadSkin extends AsyncTask<String, Void, Void> {
+
+        private Exception exception;
+
+        protected Void doInBackground(String... urls) {
+            InputStream input = null;
+            File file = new File(context.getFilesDir(), "downloadedSkin.zip");
+
+            try {
+                Log.d(TAG, "downloadSkin: Opening file");
+                input = new URL(urls [0]).openStream();
+            } catch (FileNotFoundException | MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                Log.d(TAG, "downloadSkin: Downloading skin: " + urls [0]);
+                try (OutputStream output = new FileOutputStream(file)) {
+                    byte[] buffer = new byte[4 * 1024]; // or other buffer size
+                    int read;
+
+                    while ((read = input.read(buffer)) != -1) {
+                        output.write(buffer, 0, read);
+                    }
+
+                    output.flush();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } finally {
+                try {
+                    input.close();
+                    Log.d(TAG, "doInBackground: Download complete!");
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            return null;
+        }
+
+        void unzipComplete () {
+            Log.d(TAG, "unzipComplete: Done!");
+        }
+
+        protected void onPostExecute(Void params) {
+            // TODO: check this.exception
+            // TODO: do something with the feed
+            File file = new File(context.getFilesDir(), "downloadedSkin.zip");
+            WZip wZip = new WZip();
+
+            if (file == null) {
+                Log.e(TAG, "doInBackground: FILE is null");
+            }
+            if (! file.exists())
+                Log.e(TAG, "onPostExecute: file does not exist! " +  file.toString() );
+            Log.d(TAG, "downloadSkin: Starting unzip of " + file.toString() + " to " + context.getFilesDir() + "/Skins/current");
+            WZipCallback wZipCallback = new WZipCallback() {
+                @Override
+                public void onStarted(String identifier) {
+                    Log.d(TAG, "onStarted: Unzip started");
+                }
+
+                @Override
+                public void onZipCompleted(File zipFile, String identifier) {
+                    Log.d(TAG, "onZipCompleted: unzip complete");
+                }
+
+                @Override
+                public void onUnzipCompleted(String identifier) {
+                    Log.d(TAG, "onUnzipCompleted: unzip complete");
+                }
+
+                @Override
+                public void onError(Throwable throwable, String identifier) {
+                    Log.e(TAG, "onError: " + identifier + "\n" + throwable.toString() );
+                }
+            };
+            wZip.unzip(file,
+                    new File(context.getFilesDir() + "/Skins/current"),
+                    "backupUnzipper",
+                    wZipCallback);
+
+        }
+
+    }
+
 }

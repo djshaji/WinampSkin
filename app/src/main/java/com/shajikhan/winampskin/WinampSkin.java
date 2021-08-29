@@ -1,8 +1,10 @@
 package com.shajikhan.winampskin;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -29,6 +31,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.core.app.ActivityCompat;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -71,7 +74,8 @@ public class WinampSkin {
         density = displayMetrics.scaledDensity;
 
         paint = new Paint();
-        skin = new Skin(true);
+        skin = new Skin(context,false);
+        skin.downloadSkin("https://cdn.webampskins.org/skins/01829a4d2b8b379ed34da0a87dd5c0ee.wsz");
 //        setup();
     }
 
@@ -687,7 +691,23 @@ public class WinampSkin {
         if (skin.resourceType == Skin.ResourceType.RESOURCE) {
             mBitmap = BitmapFactory.decodeResource(mainActivity.getResources(), (Integer) skin.bitmaps.get(resource));
         } else {
-            mBitmap = BitmapFactory.decodeFile(new File((String) skin.bitmaps.get("resource")).getAbsolutePath());
+            Log.d(TAG, "loadSkinBitmap: Tring to load " + skin.bitmaps.get(resource));
+            File file = new File((String) skin.bitmaps.get(resource) + ".bmp") ;
+//            if (! file.exists()) {
+//                if (!checkPermissionForReadExtertalStorage()) {
+//                    Log.e(TAG, "loadSkinBitmap: No permission for storage, trying to ask" );
+//                    try {
+//                        requestPermissionForReadExtertalStorage();
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//                skin.renameSkinFiles(skin.skinDir);
+//            }
+            if (! file.exists())
+                file = new File((String) skin.bitmaps.get(resource) + ".png") ;
+
+            mBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
         }
 
         mBitmap = Bitmap.createBitmap(mBitmap, convertDpToPixel(x), convertDpToPixel(y), convertDpToPixel(width), convertDpToPixel(height));
@@ -853,4 +873,6 @@ public class WinampSkin {
         playlistAdapter.notifyDataSetChanged();
 
     }
+
+
 }
