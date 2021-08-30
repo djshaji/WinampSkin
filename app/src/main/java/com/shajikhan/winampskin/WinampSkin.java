@@ -75,7 +75,9 @@ public class WinampSkin {
 
         paint = new Paint();
         skin = new Skin(context,false);
-        skin.downloadSkin("https://cdn.webampskins.org/skins/01829a4d2b8b379ed34da0a87dd5c0ee.wsz");
+//        skin.downloadSkin("https://cdn.webampskins.org/skins/01829a4d2b8b379ed34da0a87dd5c0ee.wsz");
+        skin.downloadSkin("https://cdn.webampskins.org/skins/b0fb83cc20af3abe264291bb17fb2a13.wsz");
+        skin.renameSkinFiles(skin.defaultSkinDir);
 //        setup();
     }
 
@@ -710,7 +712,20 @@ public class WinampSkin {
             mBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
         }
 
-        mBitmap = Bitmap.createBitmap(mBitmap, convertDpToPixel(x), convertDpToPixel(y), convertDpToPixel(width), convertDpToPixel(height));
+        Log.d(TAG, String.format ("loadSkinBitmap: %d x %d [%f %f %f %f]", mBitmap.getWidth(), mBitmap.getHeight(), width, height, x, y));
+        Log.d(TAG, String.format ("loadSkinBitmap: Converting to: [%d %d] %d x %d", convertDpToPixel(x), convertDpToPixel(y), convertDpToPixel(width), convertDpToPixel(height)));
+//        if (width == mBitmap.getWidth() && height == mBitmap.getHeight())
+//            return mBitmap ;
+//        else
+        {
+            mBitmap = Bitmap.createBitmap(mBitmap, (int) x, (int) y, (int) width, (int) height);
+//            mBitmap = Bitmap.createBitmap(mBitmap, convertDpToPixel(x), convertDpToPixel(y), convertDpToPixel(width), convertDpToPixel(height));
+            mBitmap = Bitmap.createScaledBitmap(mBitmap,
+                    convertDpToPixel(width),
+                    convertDpToPixel(height),
+                    true
+            );
+        }
         return mBitmap ;
     }
 

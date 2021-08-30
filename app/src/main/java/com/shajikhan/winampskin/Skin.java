@@ -19,7 +19,7 @@ import java.util.HashMap;
 
 public class Skin {
     String TAG = "Skin";
-    public String skinDir ;
+    public String skinDir, defaultSkinDir ;
     HashMap bitmaps ;
     public enum ResourceType {
         RESOURCE,
@@ -31,6 +31,7 @@ public class Skin {
 
     Skin (Context _context, boolean def) {
         context = _context;
+        defaultSkinDir = context.getFilesDir().toString() + "/skins/current/";
         if (def) {
             bitmaps = new HashMap <String, Integer>();
             resourceType = ResourceType.RESOURCE;
@@ -72,7 +73,7 @@ public class Skin {
 
     public void loadfromDir (String dir) {
         if (dir == null)
-             dir = context.getFilesDir().toString() + "/Skins/current";
+             dir = defaultSkinDir ;
 
         bitmaps = new HashMap <String, Integer>();
         resourceType = ResourceType.RESOURCE;
@@ -119,10 +120,12 @@ public class Skin {
         File[] files = f.listFiles();
         if (files == null) {
             Log.e(TAG, "renameSkinFiles: unable to get directory listing!" );
+            return ;
         }
         Log.e(TAG, "renameSkinFiles: Files found:"+ files.toString());
         for (File inFile : files) {
             if (! inFile.isDirectory()) {
+                Log.d(TAG, "renameSkinFiles: Rename: " + inFile.toString() + " to " + inFile.toString().toLowerCase());
                 inFile.renameTo(new File (inFile.toString().toLowerCase()));
             }
         }
@@ -199,7 +202,7 @@ public class Skin {
             }
             if (! file.exists())
                 Log.e(TAG, "onPostExecute: file does not exist! " +  file.toString() );
-            Log.d(TAG, "downloadSkin: Starting unzip of " + file.toString() + " to " + context.getFilesDir() + "/Skins/current");
+            Log.d(TAG, "downloadSkin: Starting unzip of " + file.toString() + " to " + defaultSkinDir);
             WZipCallback wZipCallback = new WZipCallback() {
                 @Override
                 public void onStarted(String identifier) {
@@ -214,6 +217,7 @@ public class Skin {
                 @Override
                 public void onUnzipCompleted(String identifier) {
                     Log.d(TAG, "onUnzipCompleted: unzip complete");
+                    renameSkinFiles(defaultSkinDir);
                 }
 
                 @Override
@@ -222,7 +226,7 @@ public class Skin {
                 }
             };
             wZip.unzip(file,
-                    new File(context.getFilesDir() + "/Skins/current"),
+                    new File(defaultSkinDir),
                     "backupUnzipper",
                     wZipCallback);
 
