@@ -194,8 +194,9 @@ public class WinampMedia {
         winampSkin.about.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent eqIntent = new Intent(mainActivity, SkinBrowser.class);
-                mainActivity.startActivityForResult(eqIntent, 0);
+                winampSkin.SkinBrowserDialog();
+//                Intent eqIntent = new Intent(mainActivity, SkinBrowser.class);
+//                mainActivity.startActivityForResult(eqIntent, 0);
             }
         });
 

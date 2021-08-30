@@ -20,6 +20,8 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -901,6 +903,19 @@ public class WinampSkin {
 //            return mBitmap ;
 //        else
         {
+            if (mBitmap.getWidth() < x + width)
+                mBitmap = Bitmap.createScaledBitmap(mBitmap,
+                        convertDpToPixel(width + x),
+                        convertDpToPixel(height),
+                        true
+                );
+
+            if (mBitmap.getHeight() < y + height)
+                mBitmap = Bitmap.createScaledBitmap(mBitmap,
+                        convertDpToPixel(width + x),
+                        convertDpToPixel(height + y),
+                        true
+                );
             mBitmap = Bitmap.createBitmap(mBitmap, (int) x, (int) y, (int) width, (int) height);
 //            mBitmap = Bitmap.createBitmap(mBitmap, convertDpToPixel(x), convertDpToPixel(y), convertDpToPixel(width), convertDpToPixel(height));
             mBitmap = Bitmap.createScaledBitmap(mBitmap,
@@ -1117,4 +1132,41 @@ public class WinampSkin {
     }
 
 
+    public void SkinBrowserDialog () {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
+        WebView webView = new WebView(mainActivity);
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.loadUrl("https://skins.webamp.org");
+        webView.setMinimumHeight(500);
+        webView.setWebViewClient(new WebViewClient() {
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                String skinUrl = url.split ("\\?skinUrl=")[1];
+                Log.d(TAG, "shouldOverrideUrlLoading: Selected skin " + skinUrl);
+                skin.downloadSkin (skinUrl);
+                skin.renameSkinFiles(skin.defaultSkinDir);
+                return true;
+            }
+        });
+
+        builder.setMessage("Select skin")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // FIRE ZE MISSILES!
+                    }
+
+                })
+                .setView(webView)
+                .show();
+
+    }
+
+    void applySkin () {
+        skin = new Skin(context,true);
+        setupMainWindow(skin, false, false);
+        setupEqualizer();
+        setupPlaylist();
+
+    }
 }
