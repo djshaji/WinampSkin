@@ -19,7 +19,7 @@ import com.shajikhan.winampskin.MainActivity;
 
 public class WinampButton extends androidx.appcompat.widget.AppCompatButton {
     float x, y, width, height ;
-    int resource ;
+    String resource ;
     MainActivity mainActivity ;
     Context context ;
     Bitmap bitmap ; // we save this coz we might need to restore it later and we don't
@@ -30,7 +30,7 @@ public class WinampButton extends androidx.appcompat.widget.AppCompatButton {
     }
 
     public WinampButton(@NonNull Context _context, MainActivity _mainActivity,
-                        int _resource, float _x, float _y,
+                        String _resource, float _x, float _y,
                         float _width, float _height) {
         super(_context);
 
@@ -64,7 +64,7 @@ public class WinampButton extends androidx.appcompat.widget.AppCompatButton {
             public void draw(@NonNull Canvas canvas) {
                 Paint paint = new Paint();
                 this.setBounds(mainActivity.winampSkin.convertDpToPixel(x), mainActivity.winampSkin.convertDpToPixel(y), mainActivity.winampSkin.convertDpToPixel(width), mainActivity.winampSkin.convertDpToPixel(height));
-                bitmap = mainActivity.winampSkin.getBitmap(x, y, width, height, resource);
+                bitmap = mainActivity.winampSkin.loadSkinBitmap(x, y, width, height, mainActivity.winampSkin.skin, resource);
                 bitmap = mainActivity.winampSkin.upscaleBitmapEx(bitmap);
                 canvas.drawBitmap(
                         bitmap,

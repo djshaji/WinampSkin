@@ -63,7 +63,7 @@
                     android:thumb="@drawable/volume_thumb"
                     android:progressTint="@android:color/transparent"
                     android:progressBackgroundTint="@android:color/transparent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="12dp"
                     android:layout_marginLeft="150dp"
                     android:progress="100"
                     android:layout_marginTop="28dp"/>

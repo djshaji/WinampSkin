@@ -76,8 +76,8 @@ public class WinampSkin {
         paint = new Paint();
         skin = new Skin(context,false);
 //        skin.downloadSkin("https://cdn.webampskins.org/skins/01829a4d2b8b379ed34da0a87dd5c0ee.wsz");
-        skin.downloadSkin("https://cdn.webampskins.org/skins/b0fb83cc20af3abe264291bb17fb2a13.wsz");
-        skin.renameSkinFiles(skin.defaultSkinDir);
+//        skin.downloadSkin("https://cdn.webampskins.org/skins/b0fb83cc20af3abe264291bb17fb2a13.wsz");
+//        skin.renameSkinFiles(skin.defaultSkinDir);
 //        setup();
     }
 
@@ -164,7 +164,7 @@ public class WinampSkin {
                 } else {
                     canvas.drawBitmap(
                             upscaleBitmap(//Bitmap.createScaledBitmap(
-                                    getBitmap(28, 30, 45, 15, R.drawable.shufrep)),
+                                    loadSkinBitmap(28, 30, 45, 15, skin, "shufrep")),
                             //convertDpToPixel(275), convertDpToPixel(16), true)),
                             convertDpToPixel(164 * UPSCALE_FACTOR),
                             convertDpToPixel(89 * UPSCALE_FACTOR),
@@ -176,7 +176,7 @@ public class WinampSkin {
                 if (! repeatActive) {
                     canvas.drawBitmap(
                             upscaleBitmap(//Bitmap.createScaledBitmap(
-                                    getBitmap(0, 0, 29, 15, R.drawable.shufrep)),
+                                    loadSkinBitmap(0, 0, 29, 15, skin, "shufrep")),
                             //convertDpToPixel(275), convertDpToPixel(16), true)),
                             convertDpToPixel(209 * UPSCALE_FACTOR),
                             convertDpToPixel(89 * UPSCALE_FACTOR),
@@ -185,7 +185,7 @@ public class WinampSkin {
                 } else {
                     canvas.drawBitmap(
                             upscaleBitmap(//Bitmap.createScaledBitmap(
-                                    getBitmap(0, 30, 29, 15, R.drawable.shufrep)),
+                                    loadSkinBitmap(0, 30, 29, 15, skin, "shufrep")),
                             //convertDpToPixel(275), convertDpToPixel(16), true)),
                             convertDpToPixel(209 * UPSCALE_FACTOR),
                             convertDpToPixel(89 * UPSCALE_FACTOR),
@@ -197,7 +197,7 @@ public class WinampSkin {
                 // stereo
                 canvas.drawBitmap(
                         upscaleBitmap(//Bitmap.createScaledBitmap(
-                                getBitmap(0, 0, 29, 12, R.drawable.monoster)),
+                                loadSkinBitmap(0, 0, 29, 12, skin, "monoster")),
                         //convertDpToPixel(275), convertDpToPixel(16), true)),
                         convertDpToPixel(239 * UPSCALE_FACTOR),
                         convertDpToPixel(41 * UPSCALE_FACTOR),
@@ -207,7 +207,7 @@ public class WinampSkin {
                 // mono
                 canvas.drawBitmap(
                         upscaleBitmap(//Bitmap.createScaledBitmap(
-                                getBitmap(29, 12, 29, 12, R.drawable.monoster)),
+                                loadSkinBitmap(29, 12, 29, 12, skin,"monoster")),
                         //convertDpToPixel(275), convertDpToPixel(16), true)),
                         convertDpToPixel(210 * UPSCALE_FACTOR),
                         convertDpToPixel(41 * UPSCALE_FACTOR),
@@ -217,7 +217,7 @@ public class WinampSkin {
                 //eq
                 canvas.drawBitmap(
                         upscaleBitmap(//Bitmap.createScaledBitmap(
-                                getBitmap(0, 61, 24, 12, R.drawable.shufrep)),
+                                loadSkinBitmap(0, 61, 24, 12, skin, "shufrep")),
                         //convertDpToPixel(275), convertDpToPixel(16), true)),
                         convertDpToPixel(219 * UPSCALE_FACTOR),
                         convertDpToPixel(58 * UPSCALE_FACTOR),
@@ -227,7 +227,7 @@ public class WinampSkin {
                 //pl
                 canvas.drawBitmap(
                         upscaleBitmap(//Bitmap.createScaledBitmap(
-                                getBitmap(23, 61, 24, 12, R.drawable.shufrep)),
+                                loadSkinBitmap(23, 61, 24, 12, skin,"shufrep")),
                         //convertDpToPixel(275), convertDpToPixel(16), true)),
                         convertDpToPixel(243 * UPSCALE_FACTOR),
                         convertDpToPixel(58 * UPSCALE_FACTOR),
@@ -237,7 +237,7 @@ public class WinampSkin {
                 //vol
                 canvas.drawBitmap(
                         upscaleBitmap(Bitmap.createScaledBitmap(
-                                getBitmap(0, 0, 67.6f, 12.3f, R.drawable.volume),
+                                loadSkinBitmap(0, 0, 67.6f, 12.3f, skin , "volume"),
                                 convertDpToPixel(69), convertDpToPixel(14), true)),
                         convertDpToPixel(106.5f * UPSCALE_FACTOR),
                         convertDpToPixel(56.5f * UPSCALE_FACTOR),
@@ -247,42 +247,61 @@ public class WinampSkin {
                 //balance
                 canvas.drawBitmap(
                         upscaleBitmap(Bitmap.createScaledBitmap(
-                                getBitmap(9.3f, 0, 37.5f, 13.6f, R.drawable.balance),
+                                loadSkinBitmap(9.3f, 0, 37.5f, 13.6f, skin,"balance"),
                                 convertDpToPixel(40), convertDpToPixel(15), true)),
                         convertDpToPixel(176.5f * UPSCALE_FACTOR),
                         convertDpToPixel(56.5f * UPSCALE_FACTOR),
                         paint
                 );
 
-                SeekBar volume = mainActivity.findViewById(R.id.volume_bar);
-//                volume.setThumb(new Drawable() {
-//                    @Override
-//                    public void draw(@NonNull Canvas canvas) {
-//                        canvas.drawBitmap(
-//                                upscaleBitmap(Bitmap.createScaledBitmap(
-//                                        getBitmap(0, 422, 14, 11, R.drawable.volume),
-//                                        convertDpToPixel(14), convertDpToPixel(11), true)),
-//                                0,
-//                                0,
-//                                paint
-//                        );
-//                    }
-//
-//                    @Override
-//                    public void setAlpha(int alpha) {
-//
-//                    }
-//
-//                    @Override
-//                    public void setColorFilter(@Nullable ColorFilter colorFilter) {
-//
-//                    }
-//
-//                    @Override
-//                    public int getOpacity() {
-//                        return 0;
-//                    }
-//                });
+//                seekbar
+                canvas.drawBitmap(
+                        upscaleBitmap(Bitmap.createScaledBitmap(
+                                loadSkinBitmap(0f, 0, 249f, 10f, skin, "posbar"),
+                                convertDpToPixel(249), convertDpToPixel(10), true)),
+                        convertDpToPixel(16f * UPSCALE_FACTOR),
+                        convertDpToPixel(73f * UPSCALE_FACTOR),
+                        paint
+                );
+
+//                big clock
+                canvas.drawBitmap(
+                        upscaleBitmap(Bitmap.createScaledBitmap(
+                                loadSkinBitmap(90f, 0, 9f, 13f, skin, "numbers"),
+                                convertDpToPixel(10), convertDpToPixel(14), true)),
+                        convertDpToPixel(59f * UPSCALE_FACTOR),
+                        convertDpToPixel(26f * UPSCALE_FACTOR),
+                        paint
+                );
+
+                canvas.drawBitmap(
+                        upscaleBitmap(Bitmap.createScaledBitmap(
+                                loadSkinBitmap(90f, 0, 9f, 13f, skin, "numbers"),
+                                convertDpToPixel(10), convertDpToPixel(14), true)),
+                        convertDpToPixel(77 * UPSCALE_FACTOR),
+                        convertDpToPixel(26f * UPSCALE_FACTOR),
+                        paint
+                );
+
+                canvas.drawBitmap(
+                        upscaleBitmap(Bitmap.createScaledBitmap(
+                                loadSkinBitmap(90f, 0, 9f, 13f, skin, "numbers"),
+                                convertDpToPixel(10), convertDpToPixel(14), true)),
+                        convertDpToPixel(89 * UPSCALE_FACTOR),
+                        convertDpToPixel(26f * UPSCALE_FACTOR),
+                        paint
+                );
+
+                canvas.drawBitmap(
+                        upscaleBitmap(Bitmap.createScaledBitmap(
+                                loadSkinBitmap(90f, 0, 9f, 13f, skin, "numbers"),
+                                convertDpToPixel(10), convertDpToPixel(14), true)),
+                        convertDpToPixel(47f * UPSCALE_FACTOR),
+                        convertDpToPixel(26f * UPSCALE_FACTOR),
+                        paint
+                );
+
+
 
             }
 
@@ -301,6 +320,39 @@ public class WinampSkin {
                 return PixelFormat.OPAQUE;
             }
         };
+
+        SeekBar volume = mainActivity.findViewById(R.id.volume_bar);
+        volume.setThumb(new Drawable() {
+            @Override
+            public void draw(@NonNull Canvas canvas) {
+                float left = (float) ((volume.getProgress() / 1000.0) * (convertDpToPixel(68) - 14));
+                Log.d(TAG, String.format("set thumb: [%d -> %f]", volume.getProgress(), left));
+                setBounds(0, 0, 14,14);
+                canvas.drawBitmap(
+                        upscaleBitmap(Bitmap.createScaledBitmap(
+                                loadSkinBitmap(0, 422, 14, 11, skin, "volume"),
+                                convertDpToPixel(14), convertDpToPixel(11), true)),
+                        left,
+                        0,
+                        paint
+                );
+            }
+
+            @Override
+            public void setAlpha(int alpha) {
+
+            }
+
+            @Override
+            public void setColorFilter(@Nullable ColorFilter colorFilter) {
+
+            }
+
+            @Override
+            public int getOpacity() {
+                return 0;
+            }
+        });
 
         prev = mainActivity.findViewById(R.id.prev);
         play = mainActivity.findViewById(R.id.play);
@@ -416,17 +468,17 @@ public class WinampSkin {
         Button on = new WinampButton(
                 context,
                 mainActivity,
-                R.drawable.eqmain,
+                "eqmain",
                 10, 119, 24, 12
         ), auto = new WinampButton(
                 context,
                 mainActivity,
-                R.drawable.eqmain,
+                "eqmain",
                 35, 119, 33, 12
         ),  preset = new WinampButton(
                 context,
                 mainActivity,
-                R.drawable.eqmain,
+                "eqmain",
                 224, 164, 44, 12
         );
 
