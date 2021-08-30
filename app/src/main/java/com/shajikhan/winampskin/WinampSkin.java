@@ -33,12 +33,18 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 
+import com.google.android.exoplayer2.C;
+
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Properties;
 
 public class WinampSkin {
     Skin skin;
@@ -354,6 +360,72 @@ public class WinampSkin {
             }
         });
 
+        SeekBar balance = mainActivity.findViewById(R.id.balance_bar);
+        balance.setThumb(new Drawable() {
+            @Override
+            public void draw(@NonNull Canvas canvas) {
+                float left = (float) ((balance.getProgress() / 1000.0) * (convertDpToPixel(68) - 14));
+                Log.d(TAG, String.format("set thumb: [%d -> %f]", balance.getProgress(), left));
+                setBounds(0, 0, 14,14);
+                canvas.drawBitmap(
+                        upscaleBitmap(Bitmap.createScaledBitmap(
+                                loadSkinBitmap(0, 422, 14, 11, skin, "balance"),
+                                convertDpToPixel(14), convertDpToPixel(11), true)),
+                        left,
+                        0,
+                        paint
+                );
+            }
+
+            @Override
+            public void setAlpha(int alpha) {
+
+            }
+
+            @Override
+            public void setColorFilter(@Nullable ColorFilter colorFilter) {
+
+            }
+
+            @Override
+            public int getOpacity() {
+                return 0;
+            }
+        });
+
+        SeekBar seekBar = mainActivity.findViewById(R.id.seek_bar);
+        seekBar.setThumb(new Drawable() {
+            @Override
+            public void draw(@NonNull Canvas canvas) {
+                float left = (float) ((seekBar.getProgress() / 100.0) * (convertDpToPixel(249) - 29));
+                Log.d(TAG, String.format("set thumb: [%d -> %f]", seekBar.getProgress(), left));
+                setBounds(0, 0, 30,10);
+                canvas.drawBitmap(
+                        upscaleBitmap(Bitmap.createScaledBitmap(
+                                loadSkinBitmap(248, 0, 29, 10, skin, "posbar"),
+                                convertDpToPixel(29), convertDpToPixel(10), true)),
+                        left,
+                        0,
+                        paint
+                );
+            }
+
+            @Override
+            public void setAlpha(int alpha) {
+
+            }
+
+            @Override
+            public void setColorFilter(@Nullable ColorFilter colorFilter) {
+
+            }
+
+            @Override
+            public int getOpacity() {
+                return 0;
+            }
+        });
+
         prev = mainActivity.findViewById(R.id.prev);
         play = mainActivity.findViewById(R.id.play);
         pause = mainActivity.findViewById(R.id.pause);
@@ -514,6 +586,57 @@ public class WinampSkin {
 //        preamp.setBackgroundColor(mainActivity.getResources().getColor(R.color.Aztec_Purple));
 //        AppCompatSeekBar gain = new WinampSlider(context, mainActivity, R.drawable.eqmain, 13, 164, 14, 64);
 //        sliders.addView(gain);
+        int [] seekBars = {
+           R.id.equalizer_preamp,
+           R.id.equalizer_60,
+           R.id.equalizer_170,
+           R.id.equalizer_310,
+           R.id.equalizer_600,
+           R.id.equalizer_1000,
+           R.id.equalizer_3000,
+           R.id.equalizer_6000,
+           R.id.equalizer_12000,
+           R.id.equalizer_14000,
+           R.id.equalizer_16000
+        } ;
+
+        for (int seekBar: seekBars) {
+            SeekBar eq_preamp = mainActivity.findViewById(seekBar);
+            eq_preamp.setMinimumHeight(convertDpToPixel(15));
+            eq_preamp.setMinimumWidth(convertDpToPixel(15));
+            eq_preamp.setThumb(new Drawable() {
+                @Override
+                public void draw(@NonNull Canvas canvas) {
+                    float left = (float) ((eq_preamp.getProgress() / 100.0) * (convertDpToPixel(64) - 12));
+                    Log.d(TAG, String.format("set thumb: [%d -> %f]", volume.getProgress(), left));
+                    setBounds(0, 0, convertDpToPixel(12), convertDpToPixel(12));
+                    canvas.drawBitmap(
+                            upscaleBitmap(Bitmap.createScaledBitmap(
+                                    loadSkinBitmap(0.5f, 164.5f, 10.5f, 11.5f, skin, "eqmain"),
+                                    convertDpToPixel(12), convertDpToPixel(11), true)),
+                            left,
+                            0,
+                            paint
+                    );
+                }
+
+                @Override
+                public void setAlpha(int alpha) {
+
+                }
+
+                @Override
+                public void setColorFilter(@Nullable ColorFilter colorFilter) {
+
+                }
+
+                @Override
+                public int getOpacity() {
+                    return 0;
+                }
+            });
+        }
+
     }
 
     public int convertDpToPixel(float dp){
@@ -547,15 +670,23 @@ public class WinampSkin {
                     So we try to paint the background with a portion from the
                     playlist bitmap
                  */
-                for (int j = 1 ; j < 19 ; j ++) {
-                    for (int t = 1; t < 21; t++) {
-                        canvas.drawBitmap(
-                                upscaleBitmap(loadSkinBitmap(208, 10, 17f, 18, skin, "pledit")),
-                                convertDpToPixel(17 * t),
-                                convertDpToPixel(25 * j),
-                                paint
-                        );
+                if (skin.resourceType == Skin.ResourceType.FILE) {
+                    Config config = new Config();
+                    config.load(skin.defaultSkinDir + "pledit.txt");
+                    String bg = config.get("NormalBG");
+                    canvas.drawColor(Color.parseColor(bg));
+                } else {
+                    for (int j = 1 ; j < 19 ; j ++) {
+                        for (int t = 1; t < 21; t++) {
+                            canvas.drawBitmap(
+                                    upscaleBitmap(loadSkinBitmap(208, 10, 17f, 18, skin, "pledit")),
+                                    convertDpToPixel(17 * t),
+                                    convertDpToPixel(25 * j),
+                                    paint
+                            );
+                        }
                     }
+
                 }
 
                 canvas.drawBitmap(upscaleBitmap(topLeft), 0, 0, paint);
@@ -939,6 +1070,50 @@ public class WinampSkin {
         playlistElements.remove(position);
         playlistAdapter.notifyDataSetChanged();
 
+    }
+
+    public class Config {
+
+        private Properties configuration;
+        private String configurationFile = "config.ini";
+
+        public Config() {
+            configuration = new Properties();
+        }
+
+        public boolean load(String filename) {
+            boolean retval = false;
+
+            try {
+                configuration.load(new FileInputStream(filename));
+                retval = true;
+            } catch (IOException e) {
+                System.out.println("Configuration error: " + e.getMessage());
+            }
+
+            return retval;
+        }
+
+        public boolean store() {
+            boolean retval = false;
+
+            try {
+                configuration.store(new FileOutputStream(this.configurationFile), null);
+                retval = true;
+            } catch (IOException e) {
+                System.out.println("Configuration error: " + e.getMessage());
+            }
+
+            return retval;
+        }
+
+        public void set(String key, String value) {
+            configuration.setProperty(key, value);
+        }
+
+        public String get(String key) {
+            return configuration.getProperty(key);
+        }
     }
 
 

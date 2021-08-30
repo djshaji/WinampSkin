@@ -63,7 +63,7 @@
                     android:thumb="@drawable/volume_thumb"
                     android:progressTint="@android:color/transparent"
                     android:progressBackgroundTint="@android:color/transparent"
-                    android:layout_height="12dp"
+                    android:layout_height="15dp"
                     android:layout_marginLeft="150dp"
                     android:progress="100"
                     android:layout_marginTop="28dp"/>
@@ -73,7 +73,7 @@
                     android:thumb="@drawable/volume_thumb"
                     android:progressTint="@android:color/transparent"
                     android:progressBackgroundTint="@android:color/transparent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="15dp"
                     android:layout_marginLeft="0dp"
                     android:progress="50"
                     android:layout_marginTop="28dp"/>
@@ -94,7 +94,7 @@
                 <SeekBar
                     android:id="@+id/seek_bar"
                     android:layout_width="373dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="15dp"
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="0dp"
                     android:layout_marginTop="6dp"
@@ -198,7 +198,7 @@
                     android:layout_gravity="center"
                     android:thumb="@drawable/thumb"
                     android:id="@+id/equalizer_preamp"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="15dp"/>
                 <SeekBar
                     android:layout_width="100dp"
                     android:max="100"
@@ -210,7 +210,7 @@
                     android:thumb="@drawable/thumb"
                     android:progress="50"
                     android:id="@+id/equalizer_60"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="15dp"/>
                 <SeekBar
                     android:progress="50"
                     android:layout_width="100dp"
@@ -222,7 +222,7 @@
                     android:layout_marginLeft="-73dp"
                     android:thumb="@drawable/thumb"
                     android:id="@+id/equalizer_170"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="15dp"/>
                 <SeekBar
                     android:progress="50"
                     android:layout_width="100dp"
@@ -234,7 +234,7 @@
                     android:layout_marginLeft="-74dp"
                     android:thumb="@drawable/thumb"
                     android:id="@+id/equalizer_310"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="15dp"/>
                 <SeekBar
                     android:progress="50"
                     android:layout_width="100dp"
@@ -246,7 +246,7 @@
                     android:layout_marginLeft="-75dp"
                     android:thumb="@drawable/thumb"
                     android:id="@+id/equalizer_600"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="15dp"/>
                 <SeekBar
                     android:progress="50"
                     android:layout_width="100dp"
@@ -258,7 +258,7 @@
                     android:layout_marginLeft="-73dp"
                     android:thumb="@drawable/thumb"
                     android:id="@+id/equalizer_1000"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="15dp"/>
                 <SeekBar
                     android:progress="50"
                     android:layout_width="100dp"
@@ -270,7 +270,7 @@
                     android:layout_marginLeft="-74dp"
                     android:thumb="@drawable/thumb"
                     android:id="@+id/equalizer_3000"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="15dp"/>
                 <SeekBar
                     android:progress="50"
                     android:layout_width="100dp"
@@ -282,7 +282,7 @@
                     android:layout_marginLeft="-74dp"
                     android:thumb="@drawable/thumb"
                     android:id="@+id/equalizer_6000"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="15dp"/>
                 <SeekBar
                     android:progress="50"
                     android:layout_width="100dp"
@@ -294,7 +294,7 @@
                     android:layout_marginLeft="-74dp"
                     android:thumb="@drawable/thumb"
                     android:id="@+id/equalizer_12000"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="15dp"/>
                 <SeekBar
                     android:progress="50"
                     android:layout_width="100dp"
@@ -306,7 +306,7 @@
                     android:layout_marginLeft="-74dp"
                     android:thumb="@drawable/thumb"
                     android:id="@+id/equalizer_14000"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="15dp"/>
                 <SeekBar
                     android:progress="50"
                     android:layout_width="100dp"
@@ -318,7 +318,7 @@
                     android:layout_marginLeft="-74dp"
                     android:thumb="@drawable/thumb"
                     android:id="@+id/equalizer_16000"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="15dp"/>
             </LinearLayout>
         </LinearLayout>
 
