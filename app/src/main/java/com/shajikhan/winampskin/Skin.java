@@ -3,6 +3,7 @@ package com.shajikhan.winampskin;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
 
 import com.wwdablu.soumya.wzip.WZip;
 import com.wwdablu.soumya.wzip.WZipCallback;
@@ -21,6 +22,8 @@ public class Skin {
     String TAG = "Skin";
     public String skinDir, defaultSkinDir ;
     HashMap bitmaps ;
+    View spinnerBox ;
+    WinampSkin winampSkin ;
     public enum ResourceType {
         RESOURCE,
         FILE
@@ -136,7 +139,9 @@ public class Skin {
         Log.d(TAG, "unzipCallback: Complete!");
     }
 
-    public void downloadSkin (String url) {
+    public void downloadSkin (String url, WinampSkin _winampSkin, View view) {
+        winampSkin = _winampSkin ;
+        spinnerBox = view ;
         new DownloadSkin().execute(url);
     }
 
@@ -212,12 +217,14 @@ public class Skin {
                 @Override
                 public void onZipCompleted(File zipFile, String identifier) {
                     Log.d(TAG, "onZipCompleted: unzip complete");
+                    renameSkinFiles(defaultSkinDir);
                 }
 
                 @Override
                 public void onUnzipCompleted(String identifier) {
                     Log.d(TAG, "onUnzipCompleted: unzip complete");
                     renameSkinFiles(defaultSkinDir);
+                    winampSkin.applySkin(spinnerBox);
                 }
 
                 @Override

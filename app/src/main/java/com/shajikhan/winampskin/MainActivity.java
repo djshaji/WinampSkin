@@ -32,6 +32,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 
 import androidx.appcompat.widget.AppCompatButton;
@@ -70,12 +71,14 @@ public class MainActivity extends AppCompatActivity {
     WinampSkin winampSkin;
     Context context ;
     WinampMedia winampMedia ;
+    LayoutInflater inflater ;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getApplicationContext();
+        inflater = getLayoutInflater();
 
         Log.d(TAG, "onCreate: " + context.getFilesDir());
 

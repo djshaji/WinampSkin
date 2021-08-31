@@ -20,6 +20,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.AdapterView;
@@ -27,6 +28,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -36,6 +38,7 @@ import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 
 import com.google.android.exoplayer2.C;
+import com.shajikhan.winampskin.databinding.ActivityMainBinding;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -51,10 +54,11 @@ import java.util.Properties;
 public class WinampSkin {
     Skin skin;
     Button  prev, next, play, pause, stop, eject, shuffle, repeat, about,
-            eq_pl;
+            eq_pl, on, auto, preset;
     SeekBar seek, volume, balance ;
     LinearLayout mainWindow ;
     MainActivity mainActivity ;
+    WinampSkin self ;
     boolean shuffleState, repeatState ;
     Context context ;
     DisplayMetrics displayMetrics ;
@@ -76,6 +80,7 @@ public class WinampSkin {
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     WinampSkin (Context context_, MainActivity mainActivity_) {
         mainActivity = mainActivity_ ;
+        self = this;
         context = context_ ;
         displayMetrics = new DisplayMetrics();
         mainActivity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -105,6 +110,7 @@ public class WinampSkin {
         setupMainWindow(skin, false, false);
         setupEqualizer();
         setupPlaylist();
+        setupPlaylistManagement();
     }
 
     public void setupMainWindow (Skin skin, boolean shuffleActive, boolean repeatActive) {
@@ -539,39 +545,47 @@ public class WinampSkin {
 
         equalizer.setBackground(drawable);
 
-        Button on = new WinampButton(
-                context,
-                mainActivity,
-                "eqmain",
-                10, 119, 24, 12
-        ), auto = new WinampButton(
-                context,
-                mainActivity,
-                "eqmain",
-                35, 119, 33, 12
-        ),  preset = new WinampButton(
-                context,
-                mainActivity,
-                "eqmain",
-                224, 164, 44, 12
-        );
+        if (on == null) {
+            on = new WinampButton(
+                    context,
+                    mainActivity,
+                    "eqmain",
+                    10, 119, 24, 12
+            );
 
-        LinearLayout buttons = mainActivity.findViewById(R.id.equalizer_buttons);
-        LinearLayout.LayoutParams layoutParamsButtons = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParamsButtons.setMargins(convertDpToPixel(14 * UPSCALE_FACTOR), convertDpToPixel(18 * UPSCALE_FACTOR), convertDpToPixel(4 * UPSCALE_FACTOR), 0);
-        buttons.setLayoutParams(layoutParamsButtons);
-        buttons.addView(on);
-        buttons.addView(auto);
+            auto = new WinampButton(
+                    context,
+                    mainActivity,
+                    "eqmain",
+                    35, 119, 33, 12
+            );
+            preset = new WinampButton(
+                    context,
+                    mainActivity,
+                    "eqmain",
+                    224, 164, 44, 12
+            );
 
-        LinearLayout.LayoutParams layoutParamsPreset = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        layoutParamsPreset.setMargins((int) (144 * UPSCALE_FACTOR * density), 0, 0, 0);
 
-        preset.setLayoutParams(layoutParamsPreset);
-        buttons.addView(preset);
+            LinearLayout buttons = mainActivity.findViewById(R.id.equalizer_buttons);
+            buttons.removeAllViews();
+            LinearLayout.LayoutParams layoutParamsButtons = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            layoutParamsButtons.setMargins(convertDpToPixel(14 * UPSCALE_FACTOR), convertDpToPixel(18 * UPSCALE_FACTOR), convertDpToPixel(4 * UPSCALE_FACTOR), 0);
+            buttons.setLayoutParams(layoutParamsButtons);
+            buttons.addView(on);
+            buttons.addView(auto);
+            buttons.addView(preset);
+            LinearLayout.LayoutParams layoutParamsPreset = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            layoutParamsPreset.setMargins((int) (144 * UPSCALE_FACTOR * density), 0, 0, 0);
 
-        LinearLayout sliders = mainActivity.findViewById(R.id.equalizer_sliders);
-        LinearLayout.LayoutParams layoutParamsSliders = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        layoutParamsSliders.setMargins(convertDpToPixel(21 * UPSCALE_FACTOR), convertDpToPixel(7 * UPSCALE_FACTOR), convertDpToPixel(4 * UPSCALE_FACTOR), convertDpToPixel(14 * UPSCALE_FACTOR));
+            preset.setLayoutParams(layoutParamsPreset);
+
+            LinearLayout sliders = mainActivity.findViewById(R.id.equalizer_sliders);
+            LinearLayout.LayoutParams layoutParamsSliders = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+            layoutParamsSliders.setMargins(convertDpToPixel(21 * UPSCALE_FACTOR), convertDpToPixel(7 * UPSCALE_FACTOR), convertDpToPixel(4 * UPSCALE_FACTOR), convertDpToPixel(14 * UPSCALE_FACTOR));
+        }
+
+        Log.d(TAG, "setupEqualizer: buttons done");
 //        sliders.setLayoutParams(layoutParamsSliders);
 
         SeekBar preamp = mainActivity.findViewById(R.id.equalizer_preamp);
@@ -588,6 +602,7 @@ public class WinampSkin {
 //        preamp.setBackgroundColor(mainActivity.getResources().getColor(R.color.Aztec_Purple));
 //        AppCompatSeekBar gain = new WinampSlider(context, mainActivity, R.drawable.eqmain, 13, 164, 14, 64);
 //        sliders.addView(gain);
+        Log.d(TAG, "setupEqualizer: giong to do seekbars");
         int [] seekBars = {
            R.id.equalizer_preamp,
            R.id.equalizer_60,
@@ -604,8 +619,8 @@ public class WinampSkin {
 
         for (int seekBar: seekBars) {
             SeekBar eq_preamp = mainActivity.findViewById(seekBar);
-            eq_preamp.setMinimumHeight(convertDpToPixel(15));
-            eq_preamp.setMinimumWidth(convertDpToPixel(15));
+//            eq_preamp.setMinimumHeight(convertDpToPixel(15));
+//            eq_preamp.setMinimumWidth(convertDpToPixel(15));
             eq_preamp.setThumb(new Drawable() {
                 @Override
                 public void draw(@NonNull Canvas canvas) {
@@ -638,6 +653,8 @@ public class WinampSkin {
                 }
             });
         }
+
+        Log.d(TAG, "setupEqualizer: seekbars done");
 
     }
 
@@ -787,12 +804,16 @@ public class WinampSkin {
             }
         } ;
 
+        linearLayout.setBackground(drawable);
+
+    }
+
+    void setupPlaylistManagement () {
         String [] songs = {
 //                "U2 - Vertigo",
 //                "Oasis - Live Forever"
         } ;
 
-        linearLayout.setBackground(drawable);
 
         final List< String > ListElementsArrayList = new ArrayList< String >
                 (Arrays.asList(songs));
@@ -848,8 +869,8 @@ public class WinampSkin {
 //        playlistUri.put("Oasis - Live Forever", "https://music.shaji.in/media/No%20Destination%20(Preview)/savera.mp3");
 //        playlistUri.put("Coldplay - Yellow", "https://music.shaji.in/media/No%20Destination%20(Preview)/savera.mp3");
 
-    }
 
+    }
     public void playlistAdd (String track, String uri) {
         playlistElements.add(track);
         playlistUri.put (track, uri);
@@ -1137,36 +1158,79 @@ public class WinampSkin {
         WebView webView = new WebView(mainActivity);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.loadUrl("https://skins.webamp.org");
-        webView.setMinimumHeight(500);
-        webView.setWebViewClient(new WebViewClient() {
+        webView.setMinimumHeight(1000);
+        LinearLayout linearLayout = new LinearLayout(context);
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        layoutParams.weight = 2.0f ;
+        linearLayout.setLayoutParams(layoutParams);
+        webView.setLayoutParams(layoutParams);
+        linearLayout.addView(webView);
+        linearLayout.setMinimumHeight(1000);
 
+        LinearLayout box = new LinearLayout(context);
+        ProgressBar progressBar = new ProgressBar(context);
+        progressBar.setIndeterminate(true);
+        TextView textView = new TextView(context);
+        textView.setText("Loading ...");
+        box.addView(progressBar);
+        LinearLayout.LayoutParams layoutParams1 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        layoutParams1.setMargins(10,10,10,10);
+        progressBar.setLayoutParams(layoutParams1);
+        textView.setLayoutParams(layoutParams1);
+        box.setLayoutParams(layoutParams1);
+        box.addView(textView);
+        linearLayout.addView(box);
+
+        box.setVisibility(View.INVISIBLE);
+
+        linearLayout.setMinimumWidth(context.getResources().getDisplayMetrics().widthPixels);
+        linearLayout.setMinimumHeight(context.getResources().getDisplayMetrics().heightPixels);
+        webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 String skinUrl = url.split ("\\?skinUrl=")[1];
                 Log.d(TAG, "shouldOverrideUrlLoading: Selected skin " + skinUrl);
-                skin.downloadSkin (skinUrl);
-                skin.renameSkinFiles(skin.defaultSkinDir);
+                box.setVisibility(View.VISIBLE);
+                textView.setText("Downloading skin ...");
+                skin.downloadSkin (skinUrl, self, box);
+//                skin.renameSkinFiles(skin.defaultSkinDir);
+//                textView.setText("Applying skin ...");
+//                applySkin(box);
+//                textView.setText("Loading ...");
+//                box.setVisibility(View.INVISIBLE);
                 return true;
             }
         });
 
-        builder.setMessage("Select skin")
+        AlertDialog alertDialog = builder
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // FIRE ZE MISSILES!
                     }
 
                 })
-                .setView(webView)
-                .show();
+                .setView(linearLayout)
+                .create();
+
+        alertDialog.setTitle("Select Skin");
+//        alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        alertDialog.getWindow().setDimAmount(0f);
+        alertDialog.show();
 
     }
 
-    void applySkin () {
-        skin = new Skin(context,true);
+    void applySkin (View view) {
+        Log.d(TAG, "applySkin: starting");
+        skin = new Skin(context,false);
+        Log.d(TAG, "applySkin: mainwindow");
         setupMainWindow(skin, false, false);
-        setupEqualizer();
+        Log.d(TAG, "applySkin: playlist");
         setupPlaylist();
+        Log.d(TAG, "applySkin: equalizer");
+        setupEqualizer();
 
+        Log.d(TAG, "applySkin: complete");
+        view.setVisibility(View.INVISIBLE);
     }
 }
