@@ -31,6 +31,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -87,7 +88,7 @@ public class WinampSkin {
         density = displayMetrics.scaledDensity;
 
         paint = new Paint();
-        skin = new Skin(context,false);
+        skin = new Skin(context,true);
 //        skin.downloadSkin("https://cdn.webampskins.org/skins/01829a4d2b8b379ed34da0a87dd5c0ee.wsz");
 //        skin.downloadSkin("https://cdn.webampskins.org/skins/b0fb83cc20af3abe264291bb17fb2a13.wsz");
 //        skin.renameSkinFiles(skin.defaultSkinDir);
@@ -279,43 +280,44 @@ public class WinampSkin {
                 );
 
 //                big clock
-                canvas.drawBitmap(
-                        upscaleBitmap(Bitmap.createScaledBitmap(
-                                loadSkinBitmap(90f, 0, 9f, 13f, skin, "numbers"),
-                                convertDpToPixel(10), convertDpToPixel(14), true)),
-                        convertDpToPixel(59f * UPSCALE_FACTOR),
-                        convertDpToPixel(26f * UPSCALE_FACTOR),
-                        paint
-                );
+                if (skin.resourceType != Skin.ResourceType.RESOURCE) {
+                    canvas.drawBitmap(
+                            upscaleBitmap(Bitmap.createScaledBitmap(
+                                    loadSkinBitmap(90f, 0, 9f, 13f, skin, "numbers"),
+                                    convertDpToPixel(10), convertDpToPixel(14), true)),
+                            convertDpToPixel(59f * UPSCALE_FACTOR),
+                            convertDpToPixel(26f * UPSCALE_FACTOR),
+                            paint
+                    );
 
-                canvas.drawBitmap(
-                        upscaleBitmap(Bitmap.createScaledBitmap(
-                                loadSkinBitmap(90f, 0, 9f, 13f, skin, "numbers"),
-                                convertDpToPixel(10), convertDpToPixel(14), true)),
-                        convertDpToPixel(77 * UPSCALE_FACTOR),
-                        convertDpToPixel(26f * UPSCALE_FACTOR),
-                        paint
-                );
+                    canvas.drawBitmap(
+                            upscaleBitmap(Bitmap.createScaledBitmap(
+                                    loadSkinBitmap(90f, 0, 9f, 13f, skin, "numbers"),
+                                    convertDpToPixel(10), convertDpToPixel(14), true)),
+                            convertDpToPixel(77 * UPSCALE_FACTOR),
+                            convertDpToPixel(26f * UPSCALE_FACTOR),
+                            paint
+                    );
 
-                canvas.drawBitmap(
-                        upscaleBitmap(Bitmap.createScaledBitmap(
-                                loadSkinBitmap(90f, 0, 9f, 13f, skin, "numbers"),
-                                convertDpToPixel(10), convertDpToPixel(14), true)),
-                        convertDpToPixel(89 * UPSCALE_FACTOR),
-                        convertDpToPixel(26f * UPSCALE_FACTOR),
-                        paint
-                );
+                    canvas.drawBitmap(
+                            upscaleBitmap(Bitmap.createScaledBitmap(
+                                    loadSkinBitmap(90f, 0, 9f, 13f, skin, "numbers"),
+                                    convertDpToPixel(10), convertDpToPixel(14), true)),
+                            convertDpToPixel(89 * UPSCALE_FACTOR),
+                            convertDpToPixel(26f * UPSCALE_FACTOR),
+                            paint
+                    );
 
-                canvas.drawBitmap(
-                        upscaleBitmap(Bitmap.createScaledBitmap(
-                                loadSkinBitmap(90f, 0, 9f, 13f, skin, "numbers"),
-                                convertDpToPixel(10), convertDpToPixel(14), true)),
-                        convertDpToPixel(47f * UPSCALE_FACTOR),
-                        convertDpToPixel(26f * UPSCALE_FACTOR),
-                        paint
-                );
+                    canvas.drawBitmap(
+                            upscaleBitmap(Bitmap.createScaledBitmap(
+                                    loadSkinBitmap(90f, 0, 9f, 13f, skin, "numbers"),
+                                    convertDpToPixel(10), convertDpToPixel(14), true)),
+                            convertDpToPixel(47f * UPSCALE_FACTOR),
+                            convertDpToPixel(26f * UPSCALE_FACTOR),
+                            paint
+                    );
 
-
+                }
 
             }
 
@@ -888,16 +890,31 @@ public class WinampSkin {
     }
 
     public Bitmap getBitmap (float x, float y, float width, float height, int resource) {
+        Log.d(TAG, String.format("getBitmap:  %f , %f => %f x %f", x,y,width,height) );
         Bitmap mBitmap = BitmapFactory.decodeResource(mainActivity.getResources(), resource) ;
-        mBitmap = Bitmap.createBitmap(mBitmap, convertDpToPixel(x), convertDpToPixel(y), convertDpToPixel(width), convertDpToPixel(height));
+        Log.d(TAG, String.format("getBitmap: image dimensions: %d x %d", mBitmap.getWidth(), mBitmap.getHeight()));
+        if (x + width > mBitmap.getWidth())
+            x = mBitmap.getWidth() - width ;
+        try {
+            mBitmap = Bitmap.createBitmap(mBitmap, convertDpToPixel(x), convertDpToPixel(y), convertDpToPixel(width), convertDpToPixel(height));
+        } catch (IllegalArgumentException e) {
+            Log.e(TAG, String.format("getBitmap: failed function call %d %d %d %d",
+                    convertDpToPixel(x), convertDpToPixel(y), convertDpToPixel(width), convertDpToPixel(height)));
+            return mBitmap;
+        }
 
         return mBitmap ;
     }
 
     public Bitmap loadSkinBitmap (float x, float y, float width, float height, Skin skin, String resource) {
         Bitmap mBitmap = null ;
+        Log.d(TAG, String.format("loadSkinBitmap: Loading %s", resource));
         if (skin.resourceType == Skin.ResourceType.RESOURCE) {
-            mBitmap = BitmapFactory.decodeResource(mainActivity.getResources(), (Integer) skin.bitmaps.get(resource));
+            return getBitmap(x,y,width,height, (Integer) skin.bitmaps.get(resource));
+//            mBitmap = BitmapFactory.decodeResource(mainActivity.getResources(), (Integer) skin.bitmaps.get(resource));
+//            mBitmap = getBitmap(x, y, width,height, (Integer) skin.bitmaps.get(resource));
+//            mBitmap = Bitmap.createBitmap(mBitmap, convertDpToPixel(x), convertDpToPixel(y), convertDpToPixel(width), convertDpToPixel(height));
+//            return mBitmap;
         } else {
             Log.d(TAG, "loadSkinBitmap: Tring to load " + skin.bitmaps.get(resource));
             File file = new File((String) skin.bitmaps.get(resource) + ".bmp") ;
@@ -918,7 +935,7 @@ public class WinampSkin {
             mBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
         }
 
-        Log.d(TAG, String.format ("loadSkinBitmap: %d x %d [%f %f %f %f]", mBitmap.getWidth(), mBitmap.getHeight(), width, height, x, y));
+        Log.e(TAG, String.format ("loadSkinBitmap: (%s) %d x %d [%f %f %f %f]", resource, mBitmap.getWidth(), mBitmap.getHeight(), width, height, x, y));
         Log.d(TAG, String.format ("loadSkinBitmap: Converting to: [%d %d] %d x %d", convertDpToPixel(x), convertDpToPixel(y), convertDpToPixel(width), convertDpToPixel(height)));
 //        if (width == mBitmap.getWidth() && height == mBitmap.getHeight())
 //            return mBitmap ;
@@ -938,7 +955,6 @@ public class WinampSkin {
                         true
                 );
             mBitmap = Bitmap.createBitmap(mBitmap, (int) x, (int) y, (int) width, (int) height);
-//            mBitmap = Bitmap.createBitmap(mBitmap, convertDpToPixel(x), convertDpToPixel(y), convertDpToPixel(width), convertDpToPixel(height));
             mBitmap = Bitmap.createScaledBitmap(mBitmap,
                     convertDpToPixel(width),
                     convertDpToPixel(height),
@@ -1232,5 +1248,6 @@ public class WinampSkin {
 
         Log.d(TAG, "applySkin: complete");
         view.setVisibility(View.INVISIBLE);
+        Toast.makeText(context, "Skin applied", Toast.LENGTH_SHORT);
     }
 }

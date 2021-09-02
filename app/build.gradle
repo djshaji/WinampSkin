@@ -16,10 +16,11 @@ android {
         applicationId "com.shajikhan.winampskin"
         minSdkVersion 16
         targetSdkVersion 30
-        versionCode 1
+        versionCode 3
         versionName "1.0"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        versionNameSuffix '-alpha'
     }
 
     buildTypes {
