@@ -15,12 +15,15 @@ import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.AdapterView;
@@ -88,7 +91,7 @@ public class WinampSkin {
         density = displayMetrics.scaledDensity;
 
         paint = new Paint();
-        skin = new Skin(context,true);
+        skin = new Skin(context,false);
 //        skin.downloadSkin("https://cdn.webampskins.org/skins/01829a4d2b8b379ed34da0a87dd5c0ee.wsz");
 //        skin.downloadSkin("https://cdn.webampskins.org/skins/b0fb83cc20af3abe264291bb17fb2a13.wsz");
 //        skin.renameSkinFiles(skin.defaultSkinDir);
@@ -1175,6 +1178,7 @@ public class WinampSkin {
         webView.getSettings().setJavaScriptEnabled(true);
         webView.loadUrl("https://skins.webamp.org");
         webView.setMinimumHeight(1000);
+
         LinearLayout linearLayout = new LinearLayout(context);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -1190,6 +1194,26 @@ public class WinampSkin {
         TextView textView = new TextView(context);
         textView.setText("Loading ...");
         box.addView(progressBar);
+        Button button = new Button(context);
+        button.setText("Download Skin");
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url = webView.getUrl();
+                Log.d(TAG, "onClick: " + url);
+                try {
+                    String skinUrl = "https://cdn.webampskins.org/skins/" + url.toString().split("https://skins.webamp.org/skin/")[1].split("/")[0] + ".wsz";
+                    Log.d(TAG, "shouldOverrideUrlLoading: Selected skin " + skinUrl);
+                    box.setVisibility(View.VISIBLE);
+                    textView.setText("Downloading skin ...");
+                    skin.downloadSkin(skinUrl, self, box);
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    alert("Select a skin to download.");
+                    return;
+                }
+            }
+        });
+
         LinearLayout.LayoutParams layoutParams1 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutParams1.setMargins(10,10,10,10);
         progressBar.setLayoutParams(layoutParams1);
@@ -1197,6 +1221,7 @@ public class WinampSkin {
         box.setLayoutParams(layoutParams1);
         box.addView(textView);
         linearLayout.addView(box);
+        linearLayout.addView(button);
 
         box.setVisibility(View.INVISIBLE);
 
@@ -1204,7 +1229,40 @@ public class WinampSkin {
         linearLayout.setMinimumHeight(context.getResources().getDisplayMetrics().heightPixels);
         webView.setWebViewClient(new WebViewClient() {
             @Override
+            public void onLoadResource(WebView view, String url) {
+                super.onLoadResource(view, url);
+                Log.d(TAG, "onLoadResource: " + url);
+            }
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                Log.d(TAG, "shouldOverrideUrlLoading: " + request.toString());
+                return super.shouldOverrideUrlLoading(view, request);
+            }
+
+            @Override
+            public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                super.onPageStarted(view, url, favicon);
+                Log.d(TAG, "onPageStarted: " + url);
+            }
+
+
+
+            private boolean shouldOverrideUrlLoading(final WebView view, final Uri request) {
+                if(request.getScheme().equals("blob")) {
+                    // do your special handling for blob urls here
+                    String skinUrl = "https://cdn.webampskins.org/skins/" + request.toString().split ("blob:https://skins.webamp.org")[1] + ".wsz";
+                    Log.d(TAG, "shouldOverrideUrlLoading: Selected skin " + skinUrl);
+                    box.setVisibility(View.VISIBLE);
+                    textView.setText("Downloading skin ...");
+                    skin.downloadSkin (skinUrl, self, box);
+                }
+                return true;
+            }
+
+            @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                Log.d(TAG, "shouldOverrideUrlLoading: " + url);
                 String skinUrl = url.split ("\\?skinUrl=")[1];
                 Log.d(TAG, "shouldOverrideUrlLoading: Selected skin " + skinUrl);
                 box.setVisibility(View.VISIBLE);
@@ -1219,8 +1277,23 @@ public class WinampSkin {
             }
         });
 
+        webView.addJavascriptInterface(new Object() {
+            public void performClick()
+            {
+                // Deal with a click on the OK button
+                String url = webView.getUrl();
+                String skinUrl = url.split ("\\?skinUrl=")[1];
+                Log.d(TAG, "shouldOverrideUrlLoading: Selected skin " + skinUrl);
+                box.setVisibility(View.VISIBLE);
+                textView.setText("Downloading skin ...");
+                skin.downloadSkin (skinUrl, self, box);
+
+            }
+
+        }, "ok");
+
         AlertDialog alertDialog = builder
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                .setPositiveButton("Close", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         // FIRE ZE MISSILES!
                     }

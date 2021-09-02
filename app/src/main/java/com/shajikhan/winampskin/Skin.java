@@ -35,9 +35,10 @@ public class Skin {
     Skin (Context _context, boolean def) {
         context = _context;
         defaultSkinDir = context.getFilesDir().toString() + "/skins/current/";
-        Log.w(TAG, "Skin: Forcing default skin, as skin dir doesnt exist" );
-        if (! new File (defaultSkinDir).exists())
+        if (! new File (defaultSkinDir).exists()) {
+            Log.w(TAG, "Skin: Forcing default skin, as skin dir doesnt exist" );
             def = true ;
+        }
         if (def) {
             bitmaps = new HashMap <String, Integer>();
             resourceType = ResourceType.RESOURCE;
