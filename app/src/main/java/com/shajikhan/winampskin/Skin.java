@@ -234,6 +234,7 @@ public class Skin {
                 @Override
                 public void onError(Throwable throwable, String identifier) {
                     Log.e(TAG, "onError: " + identifier + "\n" + throwable.toString() );
+
                 }
             };
             wZip.unzip(file,

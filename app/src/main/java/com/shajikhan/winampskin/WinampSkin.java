@@ -17,6 +17,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -475,10 +477,9 @@ public class WinampSkin {
         LinearLayout equalizer = mainActivity.findViewById(R.id.equalizer);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, convertDpToPixel((int) (displayMetrics.widthPixels / displayMetrics.scaledDensity  * 116f/275f))) ;
 
-        equalizer.setLayoutParams(layoutParams);
         Bitmap mBitmap = BitmapFactory.decodeResource(mainActivity.getResources(), R.drawable.eqmain),
                 mBitmap1 = Bitmap.createBitmap(mBitmap, 0, 0, convertDpToPixel(275), convertDpToPixel(116));
-        equalizer.setBackground(new BitmapDrawable(mainActivity.getResources(), mBitmap1));
+//        equalizer.setBackground(new BitmapDrawable(mainActivity.getResources(), mBitmap1));
         Drawable drawable = new Drawable() {
             @Override
             public void draw(@NonNull Canvas canvas) {
@@ -517,18 +518,23 @@ public class WinampSkin {
                 );
                 // pregain slider
                 float slider_coords [] = {20.5f, 77.5f, 95.5f, 113.5f, 131.f, 149.5f, 167.5f, 185.5f, 203.5f, 221.5f, 239.5f} ;
-                for (int i = 0 ; i < slider_coords.length ; i ++)
+                int x = 13 ;
+                for (int i = 0 ; i < slider_coords.length ; i ++) {
                     canvas.drawBitmap(
                             upscaleBitmap(//getBitmap(28.5f, 164.5f, 13.5f, 63f, R.drawable.eqmain)
                                     Bitmap.createScaledBitmap(
-                                            loadSkinBitmap(28.8f, 164.5f, 13f, 63, skin, "eqmain"),
+                                            loadSkinBitmap(x, 164.5f, 13f, 63, skin, "eqmain"),
                                             convertDpToPixel(16), convertDpToPixel(65), true
                                     )
                             ),
-                            convertDpToPixel(slider_coords [i] * UPSCALE_FACTOR),
+                            convertDpToPixel(slider_coords[i] * UPSCALE_FACTOR),
                             convertDpToPixel(37.5f * UPSCALE_FACTOR),
                             paint
                     );
+
+                    x += 15;
+                }
+
 
             }
 
@@ -547,10 +553,11 @@ public class WinampSkin {
                 return PixelFormat.OPAQUE;
             }
         } ;
+        Log.d(TAG, "setupEqualizer: got this far");
 
         equalizer.setBackground(drawable);
-
         if (on == null) {
+            equalizer.setLayoutParams(layoutParams);
             on = new WinampButton(
                     context,
                     mainActivity,
@@ -678,7 +685,8 @@ public class WinampSkin {
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, convertDpToPixel((height / displayMetrics.scaledDensity) - (116+116)));
         //TODO: The following works but is unnecessary. But since I've already written it and it works perfectly,
         //      I've kept it in.
-        linearLayout.setLayoutParams(layoutParams);
+        if (on ==null)
+            linearLayout.setLayoutParams(layoutParams);
 
         Drawable drawable = new Drawable() {
             @Override
@@ -1174,7 +1182,13 @@ public class WinampSkin {
 
     public void SkinBrowserDialog () {
         AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
-        WebView webView = new WebView(mainActivity);
+        WebView webView = new WebView(mainActivity) {
+            @Override
+            public boolean onCheckIsTextEditor() {
+                return true;
+            }
+
+        } ;
         webView.getSettings().setJavaScriptEnabled(true);
         webView.loadUrl("https://skins.webamp.org");
         webView.setMinimumHeight(1000);
@@ -1187,6 +1201,8 @@ public class WinampSkin {
         webView.setLayoutParams(layoutParams);
         linearLayout.addView(webView);
         linearLayout.setMinimumHeight(1000);
+        webView.setFocusable(true);
+        webView.setFocusableInTouchMode(true);
 
         LinearLayout box = new LinearLayout(context);
         ProgressBar progressBar = new ProgressBar(context);
@@ -1321,6 +1337,13 @@ public class WinampSkin {
 
         Log.d(TAG, "applySkin: complete");
         view.setVisibility(View.INVISIBLE);
-        Toast.makeText(context, "Skin applied", Toast.LENGTH_SHORT);
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                Toast toast = Toast.makeText(context, "Skin Applied", Toast.LENGTH_SHORT);
+                toast.show();
+            }
+        });
+
     }
 }
