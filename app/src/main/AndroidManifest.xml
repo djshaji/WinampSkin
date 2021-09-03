@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.shajikhan.winampskin"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.shajikhan.winampskin">
+
+    <uses-sdk tools:overrideLibrary="com.wwdablu.soumya.wzip" />
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-sdk tools:overrideLibrary="com.wwdablu.soumya.wzip"/>
 
     <application
         android:allowBackup="true"
@@ -15,6 +16,9 @@
         android:roundIcon="@mipmap/ic_launcher_foreground"
         android:supportsRtl="true"
         android:theme="@style/Theme.WinampSkin">
+        <activity
+            android:name=".OnboardingActivity"
+            android:exported="true" />
         <activity
             android:name=".SkinBrowser"
             android:exported="true" />

@@ -15,4 +15,6 @@
         <item>Coldplay - Yellow</item>
         <item>Aceriff - Mundiyan</item>
     </string-array>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>

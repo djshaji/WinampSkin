@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -79,6 +80,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         context = getApplicationContext();
         inflater = getLayoutInflater();
+
+        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+        int introVersion = sharedPref.getInt("introVersion", -1);
+        if (introVersion < BuildConfig.VERSION_CODE) {
+            Intent intent = new Intent(this, IntroScreen.class) ;
+            startActivity(intent);
+        }
 
         Log.d(TAG, "onCreate: " + context.getFilesDir());
 

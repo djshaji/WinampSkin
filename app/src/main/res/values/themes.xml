@@ -22,4 +22,9 @@
     <style name="Theme.WinampSkin.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.WinampSkin.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="ThemeOverlay.WinampSkin.FullscreenContainer" parent="">
+        <item name="fullscreenBackgroundColor">@color/light_blue_600</item>
+        <item name="fullscreenTextColor">@color/light_blue_A200</item>
+    </style>
 </resources>
