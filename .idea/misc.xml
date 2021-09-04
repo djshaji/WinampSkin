@@ -3,9 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="../../../../../mnt/data/djshaji/Projects/WinampSkin/app/src/main/res/layout/activity_onboarding.xml" value="0.1" />
+        <entry key="../../../../../mnt/data/djshaji/Projects/WinampSkin/app/src/main/res/layout/activity_intro.xml" value="0.31979166666666664" />
+        <entry key="../../../../../mnt/data/djshaji/Projects/WinampSkin/app/src/main/res/layout/activity_onboarding.xml" value="0.5612431444241316" />
         <entry key="../../../../../mnt/data/djshaji/Projects/WinampSkin/app/src/main/res/layout/activity_skin_browser.xml" value="0.2947916666666667" />
         <entry key="../../../../../mnt/data/djshaji/Projects/WinampSkin/app/src/main/res/layout/content_main.xml" value="0.4329268292682927" />
+        <entry key="../../../../../mnt/data/djshaji/Projects/WinampSkin/app/src/main/res/layout/fragment_intro2.xml" value="0.2942708333333333" />
         <entry key="../../../../../mnt/data/djshaji/Projects/WinampSkin/app/src/main/res/layout/listview.xml" value="0.29583333333333334" />
         <entry key="../../../../../mnt/data/djshaji/Projects/WinampSkin/app/src/main/res/layout/main_fragment.xml" value="0.2947916666666667" />
         <entry key="../../../../../mnt/data/djshaji/Projects/WinampSkin/app/src/main/res/layout/skin_browser.xml" value="0.31927083333333334" />

@@ -15,7 +15,11 @@
         android:id="@+id/add_url"
         android:title="URL" />
     <item
+        android:title="Local folder"
+        android:id="@+id/add_local_folder"
+        android:icon="@android:drawable/ic_menu_add"/>
+    <item
         android:title="Local file"
-        android:id="@+id/add_local"
+        android:id="@+id/add_local_file"
         android:icon="@android:drawable/ic_menu_add"/>
 </menu>

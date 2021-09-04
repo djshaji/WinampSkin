@@ -41,6 +41,7 @@ import androidx.appcompat.widget.AppCompatSeekBar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.Guideline;
 import androidx.core.app.ActivityCompat;
+import androidx.documentfile.provider.DocumentFile;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -59,7 +60,8 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.Space;
-;import java.util.ArrayList;
+;import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -81,12 +83,12 @@ public class MainActivity extends AppCompatActivity {
         context = getApplicationContext();
         inflater = getLayoutInflater();
 
-        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
-        int introVersion = sharedPref.getInt("introVersion", -1);
-        if (introVersion < BuildConfig.VERSION_CODE) {
-            Intent intent = new Intent(this, IntroScreen.class) ;
-            startActivity(intent);
-        }
+//        SharedPreferences sharedPref = getPreferences(Context.MODE_PRIVATE);
+//        int introVersion = sharedPref.getInt("introVersion", -1);
+//        if (introVersion < BuildConfig.VERSION_CODE || introVersion == -1) {
+//            Intent intent = new Intent(this, OnboardingActivity.class) ;
+//            startActivity(intent);
+//        }
 
         Log.d(TAG, "onCreate: " + context.getFilesDir());
 
@@ -122,12 +124,48 @@ public class MainActivity extends AppCompatActivity {
 //        winampMedia.exoPlayer.addMediaItem(MediaItem.fromUri("https://cdn.rawgit.com/captbaritone/webamp/43434d82/mp3/llama-2.91.mp3"));
 //        winampMedia.exoPlayer.play();
 
+        if (Intent.ACTION_VIEW.equals(getIntent().getAction()))
+        {
+            File file = new File(getIntent().getData().getPath());
+            winampSkin.playlistAdd(file.toString(), file.toString());
+        }
+
+
+
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         winampMedia.destroy ();
+    }
+
+    void loadFolder (DocumentFile path) {
+        DocumentFile[] files ;
+        try {
+            files = path.listFiles();
+        } catch (NullPointerException e) {
+            Log.e(TAG, "loadFolder: " + e.toString(), e);
+            return ;
+        }
+
+        if (files == null) {
+            Log.e(TAG, String.format("loadFolder: %s returned null files!", path.getUri().getPath()));
+            return ;
+        }
+
+        for (DocumentFile inFile : files) {
+            if (! inFile.isDirectory()) {
+                Log.d(TAG, String.format("loadFolder: adding file %s", inFile.getUri().getPath()));
+                winampSkin.playlistAdd(inFile.getName(), inFile.getUri().toString());
+                winampMedia.exoPlayer.addMediaItem(MediaItem.fromUri(inFile.getUri().getPath()));
+
+            } else {
+                loadFolder(inFile);
+            }
+        }
+
+
     }
 
     @Override
@@ -147,6 +185,15 @@ public class MainActivity extends AppCompatActivity {
                     winampSkin.playlistAdd(imageUri.getLastPathSegment(), imageUri.toString());
                     winampMedia.exoPlayer.addMediaItem(MediaItem.fromUri(imageUri));
                 }
+            }
+        }
+        //| Open folder
+        else if (requestCode == winampMedia.OPEN_FOLDER && resultCode == RESULT_OK) {
+            Uri fullPhotoUri = data.getData();
+            if (fullPhotoUri != null) {
+                DocumentFile file = DocumentFile.fromTreeUri(context, fullPhotoUri) ;
+//                File f = new File(fullPhotoUri.getPath());
+                loadFolder(file);
             }
         }
     }

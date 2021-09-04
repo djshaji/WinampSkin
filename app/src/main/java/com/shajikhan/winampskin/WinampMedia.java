@@ -53,7 +53,8 @@ public class WinampMedia {
             playlistMenuMisc;
     Handler handler ;
     WinampEqualizer winampEqualizer ;
-    int OPEN_FILE = 1 ;
+    int OPEN_FILE = 1,
+        OPEN_FOLDER = 2 ;
 
     String shaji [][] = {
             // yay!
@@ -261,6 +262,7 @@ public class WinampMedia {
         winampSkin.playlistView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.d(TAG, String.format("onItemClick: Playing %s", winampSkin.playlistUri.get(parent.getAdapter().getItem(position).toString()).toString()));
                 winampSkin.seek.setVisibility(View.VISIBLE);
                 winampSkin.bigClock.setVisibility(View.VISIBLE);
                 winampSkin.trackTitle.setVisibility(View.VISIBLE);
@@ -499,11 +501,20 @@ public class WinampMedia {
         playlistMenuAdd.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
+                Intent intent ;
                 switch (item.getItemId()) {
                     default:
                         break ;
-                    case R.id.add_local:
-                        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                    case R.id.add_local_folder:
+                        intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+//                        intent.setType("*/*");
+//                        intent.addCategory(Intent.CATEGORY_OPENABLE);
+//                        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, false);
+                        mainActivity.startActivityForResult(intent, OPEN_FOLDER);
+                        break ;
+
+                    case R.id.add_local_file:
+                        intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                         intent.setType("audio/*");
                         intent.addCategory(Intent.CATEGORY_OPENABLE);
                         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
