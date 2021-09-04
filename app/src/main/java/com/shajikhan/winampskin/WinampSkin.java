@@ -685,8 +685,8 @@ public class WinampSkin {
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, convertDpToPixel((height / displayMetrics.scaledDensity) - (116+116)));
         //TODO: The following works but is unnecessary. But since I've already written it and it works perfectly,
         //      I've kept it in.
-        if (on ==null)
-            linearLayout.setLayoutParams(layoutParams);
+//        if (on ==null)
+//            linearLayout.setLayoutParams(layoutParams);
 
         Drawable drawable = new Drawable() {
             @Override
