@@ -36,6 +36,7 @@ import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.TrackSelection;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.net.URI;
 import java.util.Collections;
@@ -50,7 +51,7 @@ public class WinampMedia {
     ExoPlayer exoPlayer = null;
     PopupMenu playlistMenuAdd, playlistMenuRemove,
             playlistMenuSelect,  getPlaylistMenuLoad,
-            playlistMenuMisc;
+            playlistMenuMisc, getPlaylistMenuFab;
     Handler handler ;
     WinampEqualizer winampEqualizer ;
     int OPEN_FILE = 1,
@@ -402,6 +403,7 @@ public class WinampMedia {
                 s = mainActivity.findViewById(R.id.playlist_select),
                 m = mainActivity.findViewById(R.id.playlist_misc),
                 l = mainActivity.findViewById(R.id.playlist_load) ;
+        FloatingActionButton fab = mainActivity.findViewById(R.id.fab);
 
         playlistMenuAdd = new PopupMenu(mainActivity.context, b);
         MenuInflater inflater = playlistMenuAdd.getMenuInflater();
@@ -455,6 +457,32 @@ public class WinampMedia {
             @Override
             public void onClick(View v) {
                 playlistMenuMisc.show();
+            }
+        });
+
+        getPlaylistMenuFab = new PopupMenu(context, fab);
+        getPlaylistMenuFab.inflate(R.menu.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getPlaylistMenuFab.show();
+            }
+        });
+
+        getPlaylistMenuFab.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    default:
+                        break ;
+                    case R.id.menu_skin:
+                        winampSkin.SkinBrowserDialog();
+                        break ;
+                    case R.id.menu_skin_default:
+                        winampSkin.setDefaultSkin();
+                        break ;
+                }
+                return false;
             }
         });
 

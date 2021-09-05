@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="Skin Browser"
+          android:id="@+id/menu_skin"/>
+    <item
+        android:id="@+id/menu_skin_default"
+        android:title="Default Skin"/>
+    <item android:title="Open folder"
+        android:id="@+id/menu_open_folder" />
+    <item android:id="@+id/menu_open_file"
+        android:title="Open File" />
+</menu>

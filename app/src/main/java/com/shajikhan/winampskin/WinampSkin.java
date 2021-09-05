@@ -1336,7 +1336,8 @@ public class WinampSkin {
         setupEqualizer();
 
         Log.d(TAG, "applySkin: complete");
-        view.setVisibility(View.INVISIBLE);
+        if (view != null)
+            view.setVisibility(View.INVISIBLE);
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
@@ -1345,5 +1346,19 @@ public class WinampSkin {
             }
         });
 
+    }
+
+    void deleteRecursive(File fileOrDirectory) {
+        if (fileOrDirectory.isDirectory())
+            for (File child : fileOrDirectory.listFiles())
+                deleteRecursive(child);
+
+        fileOrDirectory.delete();
+    }
+
+    public void setDefaultSkin () {
+        deleteRecursive(new File(skin.defaultSkinDir));
+        skin = new Skin(context, true) ;
+        applySkin(null);
     }
 }

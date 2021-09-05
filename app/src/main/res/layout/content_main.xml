@@ -370,4 +370,14 @@
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:src="@android:drawable/ic_menu_edit"
+        android:contentDescription="Settings"
+        app:layout_constraintBottom_toBottomOf="@id/window"
+        app:layout_constraintRight_toRightOf="@id/window"
+        android:layout_margin="16dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
