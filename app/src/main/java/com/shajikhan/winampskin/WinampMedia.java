@@ -472,6 +472,7 @@ public class WinampMedia {
         getPlaylistMenuFab.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
+                Intent intent ;
                 switch (item.getItemId()) {
                     default:
                         break ;
@@ -480,6 +481,17 @@ public class WinampMedia {
                         break ;
                     case R.id.menu_skin_default:
                         winampSkin.setDefaultSkin();
+                        break ;
+                    case R.id.menu_open_folder:
+                        mainActivity.startActivityForResult(new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE), OPEN_FOLDER);
+                        break ;
+                    case R.id.menu_open_file:
+                        intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                        intent.setType("audio/*");
+                        intent.addCategory(Intent.CATEGORY_OPENABLE);
+                        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                        mainActivity.startActivityForResult(intent, OPEN_FILE);
+
                         break ;
                 }
                 return false;
@@ -552,6 +564,9 @@ public class WinampMedia {
                     case R.id.add_url:
                         addUrl();
                         break;
+                    case R.id.add_featured:
+                        winampSkin.jsonDialog("https://xenamp-android.web.app/featured.json");
+                        break ;
                 }
                 return false;
             }

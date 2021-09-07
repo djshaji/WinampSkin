@@ -2,6 +2,7 @@ package com.shajikhan.winampskin;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
@@ -15,7 +16,9 @@ import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
@@ -31,9 +34,12 @@ import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
+import android.widget.Scroller;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,11 +51,22 @@ import androidx.core.app.ActivityCompat;
 
 import com.google.android.exoplayer2.C;
 import com.shajikhan.winampskin.databinding.ActivityMainBinding;
+import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -82,6 +99,96 @@ public class WinampSkin {
     Drawable mainDrawable ;
     Paint paint ;
     ListView playlistView ;
+
+    Button btnHit;
+    TextView txtJson;
+    ProgressDialog pd;
+
+    public void jsonDialogAction (String action, String urls) {
+        Log.d(TAG, String.format("jsonDialogAction: [%s] => %s", action, urls));
+        if (action.compareTo("Play") == 0) {
+            String [] vector = urls.split(",");
+            Log.d(TAG, String.format("jsonDialogAction: [%d] => %s", vector.length, urls.toString()));
+            for (String v: vector) {
+                Log.d(TAG, String.format("jsonDialogAction: adding %s", v));
+                playlistAdd(v, v);
+            }
+        }
+    }
+
+    public void jsonDialog (String url) {
+        new JsonTask().execute(url);
+    }
+
+    public class JsonTask extends AsyncTask<String, String, String> {
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            pd = new ProgressDialog(mainActivity);
+            pd.setMessage("Please wait");
+            pd.setCancelable(false);
+            pd.show();
+        }
+
+        protected String doInBackground(String... params) {
+            HttpURLConnection connection = null;
+            BufferedReader reader = null;
+
+            try {
+                URL url = new URL(params[0]);
+                connection = (HttpURLConnection) url.openConnection();
+                connection.connect();
+
+
+                InputStream stream = connection.getInputStream();
+
+                reader = new BufferedReader(new InputStreamReader(stream));
+
+                StringBuffer buffer = new StringBuffer();
+                String line = "";
+
+                while ((line = reader.readLine()) != null) {
+                    buffer.append(line+"\n");
+                    Log.d("Response: ", "> " + line);   //here u ll get whole response...... :-)
+
+                }
+
+                return buffer.toString();
+
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (connection != null) {
+                    connection.disconnect();
+                }
+                try {
+                    if (reader != null) {
+                        reader.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            if (pd.isShowing()){
+                pd.dismiss();
+            }
+
+            try {
+                dialogFromJSON(result);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     WinampSkin (Context context_, MainActivity mainActivity_) {
@@ -1179,6 +1286,97 @@ public class WinampSkin {
         }
     }
 
+    public void dialogFromJSON (String jsonString) throws JSONException {
+        JSONObject jObject = new JSONObject(jsonString);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
+        LinearLayout linearLayout = new LinearLayout(mainActivity);
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+        linearLayout.setMinimumHeight(800);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        linearLayout.setLayoutParams(layoutParams);
+        ScrollView scrollView = new ScrollView(mainActivity);
+        scrollView.addView(linearLayout);
+
+        JSONArray keys = jObject.names();
+        Log.d(TAG, String.format("dialogFromJSON: [%d] %s", keys.length(), keys.toString(3)));
+        for (int i=0; i < keys.length(); i++)
+        {
+            LinearLayout album = new LinearLayout(mainActivity);
+            linearLayout.addView(album);
+            album.setOrientation(LinearLayout.VERTICAL);
+            album.setLayoutParams(layoutParams);
+            try {
+                JSONObject o = jObject.getJSONObject(keys.getString(i));
+                Log.d(TAG, "dialogFromJSON: loading " + keys.getString(i));
+                TextView    title = new TextView(mainActivity),
+                            info = new TextView(mainActivity),
+                            description = new TextView(mainActivity) ;
+                Button action = new Button(mainActivity);
+                String _action = o.getString("action"),
+                        _urls = o.getString("url");
+
+                action.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        jsonDialogAction(_action, _urls);
+                    }
+                });
+
+                title.setText(o.getString("title"));
+                title.setEms(30);
+                title.setAllCaps(true);
+                title.setPadding(10,10,10,10);
+                info.setText(o.getString("info"));
+//                info.setTextScaleX(1.5f);
+//                description.setText(o.getString("description"));
+                action.setText(o.getString("action"));
+                Log.d(TAG, String.format("dialogFromJSON: children of album: %d", album.getChildCount()) );
+
+                ImageView imageView = new ImageView(mainActivity);
+                Picasso.get().load(o.getString("cover")).into(imageView);
+                album.addView(imageView);
+
+                album.addView(title);
+                album.addView(info);
+                album.addView(description);
+                album.addView(action);
+                Log.d(TAG, String.format("dialogFromJSON: %s %s %s %s",
+                        o.getString("title"),
+                        o.getString("info"),
+                        o.getString("description"),
+                        o.getString("url"),
+                        o.getString("cover")
+                ));
+
+
+
+                album.setMinimumHeight(300);
+
+            } catch (JSONException e) {
+                // Oops
+            }
+
+        }
+
+
+        AlertDialog alertDialog = builder
+                .setPositiveButton("Close", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // FIRE ZE MISSILES!
+                    }
+
+                })
+                .setView(scrollView)
+                .create();
+
+//        alertDialog.setTitle("Dialog");
+//        alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+//        alertDialog.getWindow().setDimAmount(0f);
+        Log.d(TAG, "dialogFromJSON: show dialog");
+        alertDialog.show();
+
+    }
 
     public void SkinBrowserDialog () {
         AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
@@ -1361,4 +1559,26 @@ public class WinampSkin {
         skin = new Skin(context, true) ;
         applySkin(null);
     }
+
+    public class BitmapAsync extends AsyncTask<String, Void, Bitmap>{
+
+        @Override
+        protected Bitmap doInBackground(String... params) {
+
+            try {
+                URL url = new URL(params [0]);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setDoInput(true);
+                connection.connect();
+                InputStream input = connection.getInputStream();
+                Bitmap myBitmap = BitmapFactory.decodeStream(input);
+                return myBitmap;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+
+        }
+    }
+
 }
