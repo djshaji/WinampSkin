@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -47,6 +48,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 
 import com.google.android.exoplayer2.C;
@@ -103,6 +105,8 @@ public class WinampSkin {
     Button btnHit;
     TextView txtJson;
     ProgressDialog pd;
+
+    SharedPreferences sharedPreferences ;
 
     public void jsonDialogAction (String action, String urls) {
         Log.d(TAG, String.format("jsonDialogAction: [%s] => %s", action, urls));
@@ -201,6 +205,7 @@ public class WinampSkin {
 
         paint = new Paint();
         skin = new Skin(context,false);
+        sharedPreferences = context.getSharedPreferences("playlist", Context.MODE_PRIVATE);
 //        skin.downloadSkin("https://cdn.webampskins.org/skins/01829a4d2b8b379ed34da0a87dd5c0ee.wsz");
 //        skin.downloadSkin("https://cdn.webampskins.org/skins/b0fb83cc20af3abe264291bb17fb2a13.wsz");
 //        skin.renameSkinFiles(skin.defaultSkinDir);
@@ -991,20 +996,48 @@ public class WinampSkin {
 
 
     }
+
     public void playlistAdd (String track, String uri) {
         playlistElements.add(track);
         playlistUri.put (track, uri);
         playlistAdapter.notifyDataSetChanged();
+        savePlaylist();
+    }
+
+    public void savePlaylist () {
+        JSONObject jsonObject = new JSONObject(playlistUri);
+        try {
+            Log.d(TAG, "savePlaylist: " + jsonObject.toString(4));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        sharedPreferences.edit().putString(".active", jsonObject.toString()).commit();
+    }
+
+    public JSONObject loadPlaylist (String name) {
+        if (name == null) name = ".active";
+        String json = sharedPreferences.getString(name, null) ;
+        if (json == null) return null ;
+        Log.d(TAG, String.format("loadPlaylist: %s => %s", name, json));
+        try {
+            return new JSONObject(json);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public void playlistShuffle () {
         Collections.shuffle(playlistElements);
         playlistAdapter.notifyDataSetChanged();
+        savePlaylist();
     }
 
     public void playlistReverse () {
         Collections.reverse(playlistElements);
         playlistAdapter.notifyDataSetChanged();
+        savePlaylist();
     }
 
     public Bitmap getBitmap (float x, float y, float width, float height, int resource) {
@@ -1239,7 +1272,7 @@ public class WinampSkin {
         playlistUri.remove (playlistElements.get (position));
         playlistElements.remove(position);
         playlistAdapter.notifyDataSetChanged();
-
+        savePlaylist();
     }
 
     public class Config {
@@ -1286,6 +1319,7 @@ public class WinampSkin {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     public void dialogFromJSON (String jsonString) throws JSONException {
         JSONObject jObject = new JSONObject(jsonString);
 
@@ -1303,9 +1337,16 @@ public class WinampSkin {
         for (int i=0; i < keys.length(); i++)
         {
             LinearLayout album = new LinearLayout(mainActivity);
-            linearLayout.addView(album);
+            CardView cardView = new CardView(mainActivity);
+            cardView.addView(album);
+            linearLayout.addView(cardView);
+
+            cardView.setRadius(10f);
+            cardView.setCardElevation(2f);
+            cardView.setContentPadding(10,10,10,10);
+            cardView.setPadding(10,10,10,10);
             album.setOrientation(LinearLayout.VERTICAL);
-            album.setLayoutParams(layoutParams);
+//            album.setLayoutParams(layoutParams);
             try {
                 JSONObject o = jObject.getJSONObject(keys.getString(i));
                 Log.d(TAG, "dialogFromJSON: loading " + keys.getString(i));
@@ -1325,9 +1366,11 @@ public class WinampSkin {
 
                 title.setText(o.getString("title"));
                 title.setEms(30);
+                title.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 title.setAllCaps(true);
                 title.setPadding(10,10,10,10);
                 info.setText(o.getString("info"));
+                info.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
 //                info.setTextScaleX(1.5f);
 //                description.setText(o.getString("description"));
                 action.setText(o.getString("action"));

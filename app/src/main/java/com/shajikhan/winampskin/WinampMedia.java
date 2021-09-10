@@ -38,6 +38,10 @@ import com.google.android.exoplayer2.trackselection.TrackSelection;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.net.URI;
 import java.util.Collections;
 import java.util.HashMap;
@@ -251,8 +255,21 @@ public class WinampMedia {
 //        winampSkin.playlistAdd("Shaji - Savera", "https://music.shaji.in/media/No%20Destination%20(Preview)/savera.mp3");
 //        winampSkin.playlistAdd("Shaji - Savera", "https://music.shaji.in/media/No%20Destination%20(Preview)/savera.mp3");
 
-        for (String []track: shaji) {
-            winampSkin.playlistAdd(Uri.parse(track [1]).getLastPathSegment(), track [1]);
+        // if there is no saved playilst, graciously give the user somethign to listen to
+        JSONObject savedPlaylist = winampSkin.loadPlaylist(null);
+        if (savedPlaylist == null) {
+            for (String[] track : shaji) {
+                winampSkin.playlistAdd(Uri.parse(track[1]).getLastPathSegment(), track[1]);
+            }
+        } else {
+            JSONArray keys = savedPlaylist.names();
+            for (int i = 0 ; i < keys.length() ; i ++) {
+                try {
+                    winampSkin.playlistAdd(keys.getString(i), savedPlaylist.getString(keys.getString(i)));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
         Log.d(TAG, "setupPlaylist: " +
