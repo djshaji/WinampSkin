@@ -375,9 +375,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
-        android:src="@android:drawable/ic_menu_edit"
+        android:src="@drawable/winamp_logo"
         android:contentDescription="Settings"
         app:layout_constraintBottom_toBottomOf="@id/window"
+        android:background="@android:color/transparent"
+        android:foreground="@android:color/transparent"
         app:layout_constraintRight_toRightOf="@id/window"
         android:layout_margin="16dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

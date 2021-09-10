@@ -6,9 +6,13 @@ import static android.media.audiofx.AudioEffect.EXTRA_AUDIO_SESSION;
 import static android.media.audiofx.AudioEffect.EXTRA_CONTENT_TYPE;
 
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.audiofx.AudioEffect;
 import android.media.audiofx.DynamicsProcessing;
 import android.net.Uri;
@@ -34,8 +38,14 @@ import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.TrackGroupArray;
+import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelection;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
+import com.google.android.exoplayer2.trackselection.TrackSelector;
+import com.google.android.exoplayer2.ui.PlayerNotificationManager;
+import com.google.android.exoplayer2.upstream.BandwidthMeter;
+import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
@@ -48,6 +58,39 @@ import java.util.HashMap;
 import java.util.List;
 
 public class WinampMedia {
+    private int notificationId = 69;
+    private PlayerNotificationManager playerNotificationManager;
+
+    private PlayerNotificationManager.MediaDescriptionAdapter mediaDescriptionAdapter = new PlayerNotificationManager.MediaDescriptionAdapter() {
+        @Override
+        public String getCurrentSubText(Player player) {
+            if (exoPlayer.isPlaying())
+                return mainActivity.getResources().getString(R.string.app_name) + " playing" ;
+            else
+                return mainActivity.getResources().getString(R.string.app_name) + " stopped" ;
+        }
+
+        @Override
+        public String getCurrentContentTitle(Player player) {
+            return (String) winampSkin.trackTitle.getText();
+        }
+
+        @Override
+        public PendingIntent createCurrentContentIntent(Player player) {
+            return null;
+        }
+
+        @Override
+        public String getCurrentContentText(Player player) {
+            return (String) winampSkin.bigClock.getText();
+        }
+
+        @Override
+        public Bitmap getCurrentLargeIcon(Player player, PlayerNotificationManager.BitmapCallback callback) {
+            return BitmapFactory.decodeResource(mainActivity.getResources(), R.drawable.winamp_logo);
+        }
+    };
+
     String TAG = "WinampMedia";
     Context context ;
     MainActivity mainActivity ;
@@ -86,6 +129,20 @@ public class WinampMedia {
         setupPlaylistMenu();
         setupEqualizer();
 //        play (shaji [shaji.length -1][0], shaji [shaji.length -1][1]);
+        BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
+//        AdaptiveTrackSelection.Factory videoTrackSelectionFactory = new AdaptiveTrackSelection.Factory(bandwidthMeter);
+//        TrackSelector trackSelector = new DefaultTrackSelector(videoTrackSelectionFactory);
+        playerNotificationManager = PlayerNotificationManager.createWithNotificationChannel(mainActivity.context, "Xenamp", R.string.app_name, notificationId, mediaDescriptionAdapter, new PlayerNotificationManager.NotificationListener() {
+            @Override
+            public void onNotificationPosted(int notificationId, Notification notification, boolean ongoing) {
+            }
+
+            @Override
+            public void onNotificationCancelled(int notificationId, boolean dismissedByUser) {
+            }
+        });
+        playerNotificationManager.setPlayer(exoPlayer);
+
     }
 
     @RequiresApi(api = Build.VERSION_CODES.P)
@@ -311,6 +368,7 @@ public class WinampMedia {
     public void destroy () {
         exoPlayer.release();
         winampEqualizer.destroy();
+        playerNotificationManager.setPlayer(null);
     }
 
     private void updateProgressBar() {
