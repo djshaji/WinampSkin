@@ -77,7 +77,10 @@ public class WinampMedia {
 
         @Override
         public PendingIntent createCurrentContentIntent(Player player) {
-            return null;
+//            Intent intent = new Intent(mainActivity, MainActivity.class);
+            return PendingIntent.getActivity(mainActivity.context, 0,
+                    mainActivity.getIntent(), PendingIntent.FLAG_UPDATE_CURRENT);
+
         }
 
         @Override
@@ -140,7 +143,12 @@ public class WinampMedia {
             @Override
             public void onNotificationCancelled(int notificationId, boolean dismissedByUser) {
             }
+
         });
+
+//        playerNotificationManager.setUsePreviousActionInCompactView(true);
+//        playerNotificationManager.setUseNextActionInCompactView(true);
+        playerNotificationManager.setUseChronometer(true);
         playerNotificationManager.setPlayer(exoPlayer);
 
     }

@@ -97,6 +97,8 @@ public class WinampSkin {
     HashMap playlistUri ;
     TextView bigClock, trackTitle ;
 
+    String playlistTextColor = "#ffffff";
+
     Canvas mainCanvas ;
     Drawable mainDrawable ;
     Paint paint ;
@@ -818,6 +820,7 @@ public class WinampSkin {
                     Config config = new Config();
                     config.load(skin.defaultSkinDir + "pledit.txt");
                     String bg = config.get("NormalBG");
+                    playlistTextColor = config.get ("Normal");
                     canvas.drawColor(Color.parseColor(bg));
                 } else {
                     for (int j = 1 ; j < 19 ; j ++) {
@@ -956,7 +959,10 @@ public class WinampSkin {
                 TextView textView=(TextView) view.findViewById(android.R.id.text1);
 
                 /*YOUR CHOICE OF COLOR*/
-                textView.setTextColor(Color.WHITE);
+                if (playlistTextColor != null)
+                    textView.setTextColor(Color.parseColor(playlistTextColor));
+                else
+                    textView.setTextColor(Color.WHITE);
 
                 return view;
             }
