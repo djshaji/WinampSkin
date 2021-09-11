@@ -11,4 +11,10 @@
         android:id="@+id/menu_open_folder" />
     <item android:id="@+id/menu_open_file"
         android:title="Open File" />
+    <item android:id="@+id/menu_report_bug"
+        android:title="Report a Bug" />
+    <item android:id="@+id/menu_idea"
+        android:title="Suggest a feature" />
+    <item android:id="@+id/menu_forum"
+        android:title="Xenamp Forums" />
 </menu>

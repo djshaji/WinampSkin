@@ -43,6 +43,7 @@ public class WinampButton extends androidx.appcompat.widget.AppCompatButton {
         height = _height ;
 
         setupButton();
+        /*
         this.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -56,6 +57,8 @@ public class WinampButton extends androidx.appcompat.widget.AppCompatButton {
 
             }
         });
+
+         */
     }
 
     private void setupButton () {

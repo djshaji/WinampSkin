@@ -33,6 +33,7 @@ import android.widget.SeekBar;
 
 import androidx.annotation.RequiresApi;
 
+import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.Player;
@@ -171,6 +172,25 @@ public class WinampMedia {
                 Log.d(TAG, "onTracksChanged: " + uri);
 
             }
+
+            @Override
+            public void onPlayerError(ExoPlaybackException error) {
+                winampSkin.alert("Unable to start playback", error.getMessage());
+                switch (error.type) {
+                    case ExoPlaybackException.TYPE_SOURCE:
+                        Log.e(TAG, "TYPE_SOURCE: " + error.getSourceException().getMessage());
+                        break;
+
+                    case ExoPlaybackException.TYPE_RENDERER:
+                        Log.e(TAG, "TYPE_RENDERER: " + error.getRendererException().getMessage());
+                        break;
+
+                    case ExoPlaybackException.TYPE_UNEXPECTED:
+                        Log.e(TAG, "TYPE_UNEXPECTED: " + error.getUnexpectedException().getMessage());
+                        break;
+                }
+            }
+
         });
 
         exoPlayer.addListener(new Player.Listener() {
@@ -355,20 +375,31 @@ public class WinampMedia {
 //                exoPlayer.addMediaItem(mediaItem);
                 // Set the media item to be played.
 
-                exoPlayer.clearMediaItems();
-
-                for (int i = position ; i < winampSkin.playlistElements.size() ; i ++) {
-                    exoPlayer.addMediaItem(MediaItem.fromUri(winampSkin.playlistUri.get(parent.getAdapter().getItem(i).toString()).toString()));
-                }
-
-                for (int i = 0 ; i < position ; i ++) {
-                    exoPlayer.addMediaItem(MediaItem.fromUri(winampSkin.playlistUri.get(parent.getAdapter().getItem(i).toString()).toString()));
-                }
-
                 // Prepare the player.
-                exoPlayer.prepare();
                 // Start the playback.
-                exoPlayer.play();
+                try {
+                    exoPlayer.clearMediaItems();
+
+                    for (int i = position ; i < winampSkin.playlistElements.size() ; i ++) {
+                        exoPlayer.addMediaItem(MediaItem.fromUri(winampSkin.playlistUri.get(parent.getAdapter().getItem(i).toString()).toString()));
+                    }
+
+                    for (int i = 0 ; i < position ; i ++) {
+                        exoPlayer.addMediaItem(MediaItem.fromUri(winampSkin.playlistUri.get(parent.getAdapter().getItem(i).toString()).toString()));
+                    }
+
+                    exoPlayer.prepare();
+                    exoPlayer.play();
+                } catch (Exception e) {
+                    Log.e(TAG, "onItemClick: Playback Error", e);
+//                    e.printStackTrace();
+                    winampSkin.alert(e.getMessage());
+                }
+//                for (int i = 0 ; i < winampSkin.playlistView.getChildCount() ; i ++) {
+//                    if (i != position)
+//                        wOverrideinampSkin.playlistView.setItemChecked(i, false);
+//                }
+
             }
         });
     }
@@ -460,7 +491,7 @@ public class WinampMedia {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                     DynamicsProcessing.EqBand eq = winampEqualizer.dynamicsProcessing.getConfig().getChannelByChannelIndex(0).getPreEq().getBand(finalI);
-                    eq.setGain((progress - 50) * 3 / 10);
+//                    eq.setGain((progress - 50) * 3 / 10);
                     Log.d(TAG, String.format("onProgressChanged: setting eq %d -> %d", finalI1, (progress - 50) * 3 / 10));
 //                    Log.d(TAG, String.format("onProgressChanged: %s", winampEqualizer.eq.toString()));
 //                    winampEqualizer.dynamicsProcessing.setEnabled(false);
@@ -556,8 +587,27 @@ public class WinampMedia {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 Intent intent ;
+                String url ;
                 switch (item.getItemId()) {
                     default:
+                        break ;
+                    case R.id.menu_report_bug:
+                        url = "https://github.com/djshaji/WinampSkin/issues/new/choose";
+                        Intent i = new Intent(Intent.ACTION_VIEW);
+                        i.setData(Uri.parse(url));
+                        mainActivity.startActivity(i);
+                        break ;
+                    case R.id.menu_idea:
+                        url = "https://github.com/djshaji/WinampSkin/discussions/categories/ideas";
+                        intent = new Intent(Intent.ACTION_VIEW);
+                        intent.setData(Uri.parse(url));
+                        mainActivity.startActivity(intent);
+                        break ;
+                    case R.id.menu_forum:
+                        url = "https://github.com/djshaji/WinampSkin/discussions";
+                        intent = new Intent(Intent.ACTION_VIEW);
+                        intent.setData(Uri.parse(url));
+                        mainActivity.startActivity(intent);
                         break ;
                     case R.id.menu_skin:
                         winampSkin.SkinBrowserDialog();

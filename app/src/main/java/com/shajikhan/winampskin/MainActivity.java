@@ -168,9 +168,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        getContentResolver().takePersistableUriPermission(data.getData(), Intent.FLAG_GRANT_READ_URI_PERMISSION);
         if (requestCode == winampMedia.OPEN_FILE && resultCode == RESULT_OK) {
             Uri fullPhotoUri = data.getData();
             if (fullPhotoUri != null) {

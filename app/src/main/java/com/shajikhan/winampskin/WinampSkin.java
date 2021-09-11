@@ -257,10 +257,18 @@ public class WinampSkin {
                         0,
                         paint
                 );
-                // titlebar
+                // titlebar really whips the llamas ass easter egg
+//                canvas.drawBitmap(
+//                        upscaleBitmap(//Bitmap.createScaledBitmap(
+//                                loadSkinBitmap(27, 57, 275, 13, skin, "titlebar")),
+//                        //convertDpToPixel(275), convertDpToPixel(16), true)),
+//                        0,
+//                        convertDpToPixel(3),
+//                        paint
+//                );
                 canvas.drawBitmap(
                         upscaleBitmap(//Bitmap.createScaledBitmap(
-                                loadSkinBitmap(27, 57, 275, 13, skin, "titlebar")),
+                                loadSkinBitmap(27, 0, 275, 13, skin, "titlebar")),
                         //convertDpToPixel(275), convertDpToPixel(16), true)),
                         0,
                         convertDpToPixel(3),
@@ -1251,6 +1259,18 @@ public class WinampSkin {
                         // FIRE ZE MISSILES!
                     }
                 }).show();
+
+    }
+
+    public void alert(String title, String msg) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
+        builder.setMessage(msg)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // FIRE ZE MISSILES!
+                    }
+                }).setTitle(title)
+                .show();
 
     }
 
