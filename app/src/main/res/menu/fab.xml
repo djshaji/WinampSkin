@@ -2,19 +2,33 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:title="Skin Browser"
-          android:id="@+id/menu_skin"/>
-    <item
-        android:id="@+id/menu_skin_default"
-        android:title="Default Skin"/>
-    <item android:title="Open folder"
-        android:id="@+id/menu_open_folder" />
-    <item android:id="@+id/menu_open_file"
-        android:title="Open File" />
-    <item android:id="@+id/menu_report_bug"
-        android:title="Report a Bug" />
-    <item android:id="@+id/menu_idea"
-        android:title="Suggest a feature" />
-    <item android:id="@+id/menu_forum"
-        android:title="Xenamp Forums" />
+    <item android:title="Change Skin">
+        <menu>
+            <item android:title="Skin Browser"
+                android:id="@+id/menu_skin"/>
+            <item
+                android:id="@+id/menu_skin_default"
+                android:title="Default Skin"/>
+        </menu>
+    </item>
+    <item android:title="Play Music">
+        <menu>
+            <item android:title="Open folder"
+                android:id="@+id/menu_open_folder" />
+            <item android:id="@+id/menu_open_file"
+                android:title="Open File" />
+        </menu>
+    </item>
+    <item android:title="Help">
+        <menu>
+            <item android:id="@+id/menu_report_bug"
+                android:title="Report a Bug" />
+            <item android:id="@+id/menu_idea"
+                android:title="Suggest a feature" />
+            <item android:id="@+id/menu_forum"
+                android:title="Xenamp Forums" />
+        </menu>
+    </item>
+    <item android:title="About"
+        android:id="@+id/menu_about"/>
 </menu>

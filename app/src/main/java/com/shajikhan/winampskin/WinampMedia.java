@@ -591,6 +591,12 @@ public class WinampMedia {
                 switch (item.getItemId()) {
                     default:
                         break ;
+                    case R.id.menu_about:
+                        url = "https://github.com/djshaji/WinampSkin";
+                        intent = new Intent(Intent.ACTION_VIEW);
+                        intent.setData(Uri.parse(url));
+                        mainActivity.startActivity(intent);
+                        break;
                     case R.id.menu_report_bug:
                         url = "https://github.com/djshaji/WinampSkin/issues/new/choose";
                         Intent i = new Intent(Intent.ACTION_VIEW);

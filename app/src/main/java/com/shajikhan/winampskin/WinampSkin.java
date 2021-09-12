@@ -831,6 +831,8 @@ public class WinampSkin {
                     playlistTextColor = config.get ("Normal");
                     canvas.drawColor(Color.parseColor(bg));
                 } else {
+                    canvas.drawColor(mainActivity.getResources().getColor(R.color.Black));
+                    /*
                     for (int j = 1 ; j < 19 ; j ++) {
                         for (int t = 1; t < 21; t++) {
                             canvas.drawBitmap(
@@ -841,6 +843,8 @@ public class WinampSkin {
                             );
                         }
                     }
+
+                     */
 
                 }
 
@@ -1098,6 +1102,12 @@ public class WinampSkin {
                 file = new File((String) skin.bitmaps.get(resource) + ".png") ;
 
             mBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+        }
+
+        if (mBitmap == null) {
+            Bitmap.Config conf = Bitmap.Config.ARGB_4444; // see other conf types
+            mBitmap = Bitmap.createBitmap((int)width, (int)height, conf);
+            return mBitmap;
         }
 
         Log.e(TAG, String.format ("loadSkinBitmap: (%s) %d x %d [%f %f %f %f]", resource, mBitmap.getWidth(), mBitmap.getHeight(), width, height, x, y));
