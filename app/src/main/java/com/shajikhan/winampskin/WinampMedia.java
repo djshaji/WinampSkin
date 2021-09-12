@@ -365,6 +365,10 @@ public class WinampMedia {
         winampSkin.playlistView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                winampSkin.playlistSelectNone();
+                if (exoPlayer.isPlaying())
+                    exoPlayer.stop();
+
                 Log.d(TAG, String.format("onItemClick: Playing %s", winampSkin.playlistUri.get(parent.getAdapter().getItem(position).toString()).toString()));
                 winampSkin.seek.setVisibility(View.VISIBLE);
                 winampSkin.bigClock.setVisibility(View.VISIBLE);

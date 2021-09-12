@@ -990,7 +990,9 @@ public class WinampSkin {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 listView.setSelection(position);
-                return false;
+                listView.setItemChecked(position, true);
+                Log.d(TAG, "onItemLongClick: long click");
+                return true;
             }
         });
 
@@ -1660,4 +1662,15 @@ public class WinampSkin {
         }
     }
 
+    public void playlistSelectNone () {
+        for (int i = 0 ; i < playlistView.getChildCount() ; i ++) {
+            playlistView.setItemChecked(i, false);
+        }
+    }
+
+    public void playlistSelectAll () {
+        for (int i = 0 ; i < playlistView.getChildCount() ; i ++) {
+            playlistView.setItemChecked(i, true);
+        }
+    }
 }
