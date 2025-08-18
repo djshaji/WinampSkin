@@ -1,3 +1,5 @@
+# This project has been written from scratch here: https://github.com/djshaji/eva
+
 # Winamp
 ##### Music Player with a familiar look!
 _Ladies and Gentlemen, it's Winamp, for Android!_
